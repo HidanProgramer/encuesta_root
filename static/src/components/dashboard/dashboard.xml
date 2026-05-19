@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="encuesta_root.ClientesDashboardTemplate">
+        <div class="o_dashboards p-4" style="background-color: #f8f9fa; min-height: 100vh;">
+            <div class="row mb-4 align-items-center">
+                <div class="col">
+                    <h2 class="fw-bold text-dark mb-1">Dashboard de Control</h2>
+                    <p class="text-muted small mb-0">Monitoreo en tiempo real de encuestas y evaluaciones técnicas.</p>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary shadow-sm" t-on-click="loadDashboardData">
+                        <i class="fa fa-refresh me-1"></i> Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-5">
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
+                         t-on-click="() => this.openListView([], 'Todas las Encuestas')"
+                         style="border-left: 5px solid #0056b3 !important; transition: transform 0.2s;">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Total Encuestas</h6>
+                                <h3 class="fw-bold mb-0 text-dark"><t t-esc="stats.total_encuestas"/></h3>
+                            </div>
+                            <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                                <i class="fa fa-clipboard text-primary fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
+                         t-on-click="() => this.openListView([['estado_evaluacion', '=', 'aprobado']], 'Casos Aprobados')"
+                         style="border-left: 5px solid #198754 !important;">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Aprobados</h6>
+                                <h3 class="fw-bold mb-0 text-success"><t t-esc="stats.total_aprobados"/></h3>
+                            </div>
+                            <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                                <i class="fa fa-check-circle text-success fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
+                         t-on-click="() => this.openListView([['sistema_recomendado', '=', '1kw']], 'Sistemas Recomendados 1 kW')"
+                         style="border-left: 5px solid #ffc107 !important;">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Sistemas 1 kW</h6>
+                                <h3 class="fw-bold mb-0 text-warning"><t t-esc="stats.total_1kw"/></h3>
+                            </div>
+                            <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                                <i class="fa fa-sun-o text-warning fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
+                         t-on-click="() => this.openListView([['sistema_recomendado', '=', '2kw']], 'Sistemas Recomendados 2 kW')"
+                         style="border-left: 5px solid #0dcaf0 !important;">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Sistemas 2 kW</h6>
+                                <h3 class="fw-bold mb-0 text-info"><t t-esc="stats.total_2kw"/></h3>
+                            </div>
+                            <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                                <i class="fa fa-bolt text-info fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="p-5 border border-dashed rounded-3 text-center bg-white text-muted">
+                        <i class="fa fa-bar-chart fa-3x mb-3 text-opacity-50"></i>
+                        <h5>Sección de Gráficas Próximamente</h5>
+                        <p class="small">Aquí podrás instanciar tus futuros componentes Owl utilizando Chart.js o ApexCharts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
