@@ -15,6 +15,12 @@
              'views/view_encuesta_actividad_inherit.xml',
              'views/view_encuesta_aspectos_inherit.xml',
              'views/view_encuesta_criterios_inherit.xml'],
+    'assets': {
+        'web.assets_backend': [
+            'encuesta_root/static/src/components/dashboard/dashboard.js',
+            'encuesta_root/static/src/components/dashboard/dashboard.xml',
+        ],
+    },
     'images': ['static/description/banner.jpg'],
     'license': 'LGPL-3',
     'installable': True,
