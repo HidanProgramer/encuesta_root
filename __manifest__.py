@@ -15,7 +15,7 @@
              'views/view_encuesta_actividad_inherit.xml',
              'views/view_encuesta_aspectos_inherit.xml',
              'views/view_encuesta_criterios_inherit.xml'],
-    'images': 'static/description/banner.jpg',
+    'images': ['static/description/banner.jpg'],
     'license': 'LGPL-3',
     'installable': True,
     'application': True,
