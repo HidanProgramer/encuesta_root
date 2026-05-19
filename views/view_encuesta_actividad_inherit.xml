@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_encuesta_actividad_inherit" model="ir.ui.view">
+        <field name="name">encuesta.actividad.inherit</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="inherit_id" ref="encuesta_root.view_clientes_encuesta_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='tab_actividad']" position="inside">
+                <group>
+                    <!-- Ingresos del Hogar -->
+                     <group string="Quienes generan los ingresos en el Hogar">
+                        <field name="ingresos_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="parentesco"/>
+                                <field name="edad"/>
+                                <field name="procedencia"/>
+                            </list>
+                        </field>
+                     </group>
+                     <!-- Genera Empleo -->
+                     <label for="genera_empleo" class="text-mutated"/>
+                     <field name="genera_empleo"/>
+                     <group string="Cantidad de Trabajadores" invisible="genera_empleo == False">
+                        <field name="trabajadores_h" required="genera_empleo == True"/>
+                        <field name="trabajadores_m" required="genera_empleo == True"/>
+                     </group>
+                     <!-- A quien vende Productos -->
+                     <group string="Manejo de Productos">
+                        <field name="venta_local"/>
+                        <field name="entrega_cooperativa"/>
+                        <field name="entrega_empresa"/>
+                        <field name="autoconsumo"/>
+                     </group>
+                     <!-- Que productos vende -->
+                     <group string="Producto y Plan Anual">
+                        <field name="producto_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="nombre"/>
+                                <field name="plan_anual"/>
+                                <field name="unidad_medida"/>
+                            </list>
+                        </field>
+                     </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

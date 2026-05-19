@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_clientes_encuesta_list" model="ir.ui.view">
+        <field name="name">clientes.encuesta.list</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="arch" type="xml">
+            <list string="Listado de Clientes">
+                <field name="cliente"/>
+                <field name="ci"/>
+                <field name="fecha_enc"/>
+                <field name="municipio"/>
+                <field name="c_popular"/>
+                <field name="comunidad"/>
+                <field name="sistema_recomendado"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_clientes_encuesta_form" model="ir.ui.view">
+        <field name="name">clientes.encuesta.form</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <header>
+                        <field name="estado_evaluacion" widget="statusbar" statusbar_visible= "pendiente,aprobado,rechazado" class="me-3"/>
+
+                        <div class="d-flex align-items-center ms-m">
+                            <span class="badge rounded-pill text-bg-primary p-2 px-3" invisible="not sistema_recomendado">
+                                <i class="fa fa-cog me-1"/>
+                                <field name="sistema_recomendado" readonly="1" options="{'no_open': True}"/>
+                            </span>
+                        </div>
+                        <button name="action_recalcular" string="Recalcular" type="object" class="btn btn-outline-secondary btn-sm ms-auto me-2"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="fecha_enc"/>
+                            <field name="cliente"/>
+                            <field name="ci"/>
+                            <label string='Latitud' for="lat_deg"/>
+                            <div class="o_row d-flex">
+                                <field name="lat_deg" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 30px"/><span class="me-2">⁰</span>
+                                <field name="lat_min" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 30px"/><span class="me-2">'</span>
+                                <field name="lat_seg" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 50px"/><span>"</span>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="c_popular"/>
+                            <field name="municipio"/>
+                            <field name="comunidad"/>
+                            <label string='Longitud' for="lat_deg"/>
+                            <div class="o_row d-flex">
+                                <field name="lon_deg" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 30px"/><span class="me-2">⁰</span>
+                                <field name="lon_min" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 30px"/><span class="me-2">'</span>
+                                <field name="lon_seg" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 50px"/><span>"</span>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Características Vivienda" name="tab_vivienda"/>
+                        <page string="Servicio Eléctrico" name="tab_servicio"/>
+                        <page string="Núcleo Familiar" name="tab_nucleo"/>
+                        <page string="Actividad Productiva" name="tab_actividad"/>
+                        <page string="Aspectos Limitantes" name="tab_aspectos"/>
+                        <page string="Criterios de Selección" name="tab_criterios"/>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_clientes_encuesta" model="ir.actions.act_window">
+        <field name="name">Encuestas</field>
+        <field name="res_model">clientes.encuesta</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    
+    <record id="action_grafico_1" model="ir.actions.act_window">
+        <field name="name">Estado de Evaluación</field>
+        <field name="res_model">clientes.encuesta</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id" ref="view_encuesta_graph_estado"/>
+    </record>
+
+    <record id="action_grafico_2" model="ir.actions.act_window">
+        <field name="name">Sistemas por Municipio</field>
+        <field name="res_model">clientes.encuesta</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id" ref="view_clientes_encuesta_bar_municipio"/>
+    </record>
+
+    <record id="action_grafico_3" model="ir.actions.act_window">
+        <field name="name">Servicio Energético</field>
+        <field name="res_model">clientes.encuesta</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_encuesta_graph_servicio_energetico"/>
+    </record>
+
+    <record id="action_grafico_4" model="ir.actions.act_window">
+        <field name="name">Tipo Viviendas</field>
+        <field name="res_model">clientes.encuesta</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_encuesta_graph_tipo_vivienda"/>
+    </record>
+
+    <menuitem id="menu_proyectos_root" name="Proyectos" sequence="10"/>
+    <menuitem id="menu_analisis_root" name="Informes" sequence="20"/>
+
+    <menuitem id="menu_clientes_encuesta" name="Encuestas" parent="menu_proyectos_root" action="action_clientes_encuesta" sequence="10"/>
+    <menuitem id="menu_grafico_1" name="Estado de Evaluación" parent="menu_analisis_root" action="action_grafico_1" sequence="10"/>
+    <menuitem id="menu_grafico_2" name="Sistemas por Municipios" parent="menu_analisis_root" action="action_grafico_2" sequence="10"/>
+    <menuitem id="menu_grafico_3" name="Servicio Energético" parent="menu_analisis_root" action="action_grafico_3" sequence="10"/>
+    <menuitem id="menu_grafico_4" name="Tipos de Viviendas" parent="menu_analisis_root" action="action_grafico_4" sequence="10"/>    
+</odoo>

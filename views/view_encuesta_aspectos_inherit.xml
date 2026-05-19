@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_encuesta_aspecto_inherit" model="ir.ui.view">
+        <field name="name">encuesta.aspecto.inherit</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="inherit_id" ref="encuesta_root.view_clientes_encuesta_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='tab_aspectos']" position="inside">
+                <group string="Priorice del 1 (mayor incidencia) al 5 (menor incidencia)">
+                    <group>
+                        <field name="limit_energia"/>
+                        <field name="limit_meteorologia"/>
+                        <field name="limit_seguridad"/>
+                        <field name="limit_mano_obra"/>
+                        <field name="limit_otro_aspecto"/>
+                        <field name="limit_otro_prioridad"/>
+                    </group>
+                    <group string="Aprovechamiento de la Energía">
+                        <field name="aprovechamiento_energia"/>
+                        <field name="emprende_negocio"/>
+                        <field name="negocio_descripcion" invisible="emprende_negocio != 'si'" required="emprende_negocio == 'si'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_clientes_encuesta,access_clientes_encuesta,model_clientes_encuesta,base.group_user,1,1,1,1
+access_ssfv_ingresos_hogar,access_ssfv_ingresos_hogar,model_ssfv_ingresos_hogar,base.group_user,1,1,1,1
+access_ssfv_producto,access_ssfv_producto,model_ssfv_producto,base.group_user,1,1,1,1
+access_ssfv_nucleo_familiar,access_ssfv_nucleo_familiar,model_ssfv_nucleo_familiar,base.group_user,1,1,1,1

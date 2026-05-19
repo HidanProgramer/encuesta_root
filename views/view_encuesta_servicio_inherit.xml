@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_encuesta_servicio_inherit" model="ir.ui.view">
+        <field name="name">encuesta.servicio.inherit</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="inherit_id" ref="encuesta_root.view_clientes_encuesta_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='tab_servicio']" position="inside">
+                <group>
+                    <label for="servicio_electrico" class="text-mutated"/>
+                    <field name="servicio_electrico"/>
+                    <group string="Condición Eléctrica">
+                        <field name="luminarias"/>
+                        <field name="interruptores"/>
+                        <field name="funcionamiento"/>
+                    </group>
+                    <group string="Sistema que Dispone">
+                        <field name="sfva_300"/>
+                        <field name="sfva_operativo"/>
+                        <field name="servicio_ge"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

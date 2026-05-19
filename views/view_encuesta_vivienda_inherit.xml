@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_encuesta_vivienda_inherit" model="ir.ui.view">
+        <field name="name">encuesta.vivienda.inherit</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="inherit_id" ref="encuesta_root.view_clientes_encuesta_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='tab_vivienda']" position="inside">
+                <group string="Características de la Vivienda">
+                    <group>
+                        <field name="tipo_vivienda"/>
+                        <field name="tipo_finca" invisible="tipo_vivienda != 'finca'" required="tipo_vivienda == 'finca'"/>
+                    </group>
+                    <group string="Material de Construcción">
+                        <field name="material_madera"/>
+                        <field name="material_mamposteria"/>
+                        <field name="material_otro"/>
+                        <!--<field name="material_construccion" widget="boolean"/>-->
+                        <field name="otro_material" invisible="material_otro == False" requiere="material_otro == True"/>
+                    </group>
+                    <group>
+                        <field name="divisiones"/>
+                            <field name="sala" invisible="not divisiones"/>
+                            <field name="comedor" invisible="not divisiones"/>
+                            <field name="cocina" invisible="not divisiones"/>
+                            <field name="cuartos" invisible="not divisiones"/>
+                            <field name="banos" invisible="not divisiones"/>
+                    </group>
+                    <group string="Condición de la Vivienda">
+                        <field name="condicion_vivienda" widget="radio" help="Buena: Con Techo y paredes en buen estado, sin filtraciones y con seguridad.&#10;Aceptable: con techo y paredes en buen estado, sin filtraciones.&#10;Deficiente: con filtraciones y sin seguridad para los equipos."/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

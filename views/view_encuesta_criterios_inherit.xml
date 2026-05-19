@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_encuesta_criterios_inherit" model="ir.ui.view">
+        <field name="name">encuesta.criterios.inherit</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="inherit_id" ref="encuesta_root.view_clientes_encuesta_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='tab_criterios']" position="inside">
+                <group>
+                    <label for="criterio_mujer" string="Marque si el hogar/finca cumple con los siguientes criterios" class="text-mutated"/>
+                    <group string="Criterios de Selección">
+                        <field name="criterio_mujer" widget="radio" options="{'horizontal': true}"/>
+                        <field name="criterio_beneficiario" widget="radio" options="{'horizontal': true}"/>
+                        <field name="criterio_seguridad" widget="radio" options="{'horizontal': true}"/>
+                        <field name="criterio_disponibilidad" widget="radio" options="{'horizontal': true}"/>
+                        <field name="criterio_uso_productivo" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                    <group string="Observaciones Adicionales">
+                        <field name="observaciones_criterios" nolabel="1" placeholder="Agregue comentarios relevantes..."/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

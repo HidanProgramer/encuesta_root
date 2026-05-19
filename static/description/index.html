@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Encuestas | Odoo 18</title>
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --secondary: #0f172a;
+            --accent: #22c55e;
+            --bg-dark: #0b1120;
+            --bg-card: rgba(15, 23, 42, 0.78);
+            --bg-soft: #111827;
+            --text-light: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-soft: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(20, 184, 166, 0.15), transparent 30%),
+                radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.08), transparent 35%),
+                linear-gradient(135deg, #020617 0%, #0b1120 55%, #111827 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1280px;
+            margin: auto;
+        }
+
+        .section {
+            padding: 70px 0;
+        }
+
+        .hero {
+            padding-top: 50px;
+            text-align: center;
+        }
+
+        .cover-image {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin: 0 auto 50px;
+            display: block;
+            border: 1px solid var(--border-soft);
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        h1 span {
+            color: var(--primary-light);
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: var(--text-muted);
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .badge {
+            background: rgba(20, 184, 166, 0.12);
+            border: 1px solid rgba(20, 184, 166, 0.25);
+            color: #ccfbf1;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-soft);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        .card h3 {
+            color: var(--primary-light);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 18px;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-muted);
+            max-width: 850px;
+            margin: auto;
+            font-size: 18px;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 18px 22px;
+            border-radius: 14px;
+            border: 1px solid var(--border-soft);
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .screenshots img {
+            width: 100%;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-soft);
+        }
+
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .use-case {
+            padding: 25px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(15, 118, 110, 0.12), rgba(255, 255, 255, 0.03));
+            border: 1px solid var(--border-soft);
+        }
+
+        .use-case h4 {
+            color: var(--primary-light);
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .cta {
+            text-align: center;
+            background: linear-gradient(145deg, rgba(20, 184, 166, 0.15), rgba(34, 197, 94, 0.08));
+            border: 1px solid rgba(20, 184, 166, 0.2);
+            padding: 60px 30px;
+            border-radius: 24px;
+            margin-top: 40px;
+        }
+
+        .cta h2 {
+            font-size: 38px;
+            margin-bottom: 18px;
+        }
+
+        .cta p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .support {
+            font-size: 20px;
+            color: #ccfbf1;
+            font-weight: bold;
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 38px;
+            }
+
+            .section-title {
+                font-size: 30px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .screenshots {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HERO -->
+    <section class="hero section">
+        <div class="container">
+            <img src="cover.png" alt="Gestión de Encuestas Cover" class="cover-image" style="max-width: 100%; height: auto;">
+
+            <h1>Gestión de <span>Encuestas</span></h1>
+
+            <p class="subtitle">
+                Solución avanzada para la evaluación técnica de clientes con viviendas aisladas,
+                diseñada para optimizar la captación, análisis y viabilidad de proyectos
+                fotovoltaicos en Odoo 18.
+            </p>
+
+            <div class="badges">
+                <div class="badge">Odoo 18 Ready</div>
+                <div class="badge">Encuestas Inteligentes</div>
+                <div class="badge">Análisis de Viabilidad Solar</div>
+                <div class="badge">Diseño Profesional</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Funciones principales</h2>
+            <p class="section-desc">
+                Diseñado para empresas que requieren una evaluación estructurada de clientes potenciales
+                para instalaciones solares aisladas.
+            </p>
+
+            <div class="grid-4">
+                <div class="card">
+                    <h3>Encuestas Dinámicas</h3>
+                    <p>Formularios personalizados según ubicación, consumo, infraestructura y necesidades energéticas.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Evaluación Inteligente</h3>
+                    <p>Criterios automatizados para identificar clientes viables y priorizar oportunidades.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Visualización Profesional</h3>
+                    <p>Resultados organizados con estructura clara para análisis comercial y técnico.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Enfoque Fotovoltaico</h3>
+                    <p>Especializado en viviendas aisladas y proyectos de electrificación renovable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DETAILED FEATURES -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Capacidades avanzadas</h2>
+
+            <div class="features-list">
+                <div class="feature-item">✔ Gestión de criterios personalizados</div>
+                <div class="feature-item">✔ Registro técnico y social de clientes</div>
+                <div class="feature-item">✔ Segmentación de viabilidad energética</div>
+                <div class="feature-item">✔ Procesamiento estructurado de respuestas</div>
+                <div class="feature-item">✔ Compatible con flujos empresariales Odoo</div>
+                <div class="feature-item">✔ Preparado para escalabilidad comercial</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREENSHOTS -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Vista del sistema</h2>
+            <p class="section-desc">
+                Interfaz moderna, optimizada para operaciones empresariales y toma de decisiones.
+            </p>
+
+            <div class="screenshots">
+                <img src="screenshot1.png" alt="Captura 1" style="max-width: 100%; height: auto;">
+                <img src="screenshot2.png" alt="Captura 2" style="max-width: 100%; height: auto;">
+                <img src="screenshot3.png" alt="Captura 3" style="max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </section>
+
+    <!-- USE CASES -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Casos de uso</h2>
+
+            <div class="use-cases">
+                <div class="use-case">
+                    <h4>Empresas Fotovoltaicas</h4>
+                    <p>Captación y evaluación técnica de clientes para proyectos solares.</p>
+                </div>
+
+                <div class="use-case">
+                    <h4>Programas de Electrificación Rural</h4>
+                    <p>Identificación de hogares con necesidades energéticas aisladas.</p>
+                </div>
+
+                <div class="use-case">
+                    <h4>Consultoría Técnica</h4>
+                    <p>Procesamiento de datos para diseño de soluciones renovables.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+        <div class="container">
+            <div class="cta">
+                <h2>Optimiza tus proyectos solares desde la captación</h2>
+                <p>
+                    Mejora la recopilación de información, identifica clientes viables
+                    y acelera decisiones estratégicas con una plataforma diseñada para el sector fotovoltaico.
+                </p>
+
+                <div class="support">
+                    Soporte: hiddanprogrammer@gmail.com
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        Desarrollado por HiddanProgrammer | Gestión de Encuestas para Odoo 18
+    </footer>
+
+</body>
+
+</html>
