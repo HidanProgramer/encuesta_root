@@ -229,5 +229,30 @@ class Clientes(models.Model):
                 rec.tipo_servicio_energetico = 'ge'
             else:
                 rec.tipo_servicio_energetico = 'red'
+    
+    @api.model
+    def get_dashboard_stats(self):
+        """
+        Retorna las métricas agregadas para las KPI cards de forma eficiente.
+        """
+        # 1. Total de encuestas
+        total_encuestas = self.search_count([])
+        
+        # 2. Total de aprobados
+        total_aprobados = self.search_count([('estado_evaluacion', '=', 'aprobado')])
+        
+        # 3. Total Sistema 1 kW
+        total_1kw = self.search_count([('sistema_recomendado', '=', '1kw')])
+        
+        # 4. Total Sistema 2 kW
+        total_2kw = self.search_count([('sistema_recomendado', '=', '2kw')])
+
+        return {
+            'total_encuestas': total_encuestas,
+            'total_aprobados': total_aprobados,
+            'total_1kw': total_1kw,
+            'total_2kw': total_2kw,
+        }
+
 
             
