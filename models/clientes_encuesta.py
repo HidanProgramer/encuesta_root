@@ -301,7 +301,7 @@ class Clientes(models.Model):
                     m_2kw[m] = line.get('__count', 0)
 
         # Gráfico 4: Estado de Evaluación (Aprobados 1kw, Aprobados 2kw, Rechazados)
-        evaluacion_data = self.read_group([], ['sistema_recomendado'], ['sistema_recommended' if 'sistema_recommended' in self._fields else 'sistema_recommended'])
+        evaluacion_data = self.read_group([], ['sistema_recomendado'], ['sistema_recomendado' if 'sistema_recomendado' in self._fields else 'sistema_recomendado'])
         eval_labels = ['Aprobados 1 kW', 'Aprobados 2 kW', 'Rechazados']
         eval_values = [0, 0, 0]
         for line in evaluacion_data:

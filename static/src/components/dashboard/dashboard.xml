@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
     
-    <t t-name="encuestas_root.DashboardChartTemplate">
+    <t t-name="encuesta_root.DashboardChartTemplate">
         <div style="position: relative; height: 260px; width: 100%;">
             <canvas t-ref="chartCanvas"/>
         </div>
     </t>
 
-    <t t-name="encuestas_root.ClientesDashboardTemplate">
-        <div class="o_dashboards p-4" style="background-color: #f4f6f9; min-height: 100vh; overflow-y: auto;">
+    <t t-name="encuesta_root.ClientesDashboardTemplate">
+        <div class="o_content h-100 overflow-auto p-4" style="background-color: #f4f6f9;">
             
             <div class="row mb-4 align-items-center">
                 <div class="col">
@@ -16,7 +16,7 @@
                     <p class="text-muted small mb-0">Análisis estadístico e indicadores de auto-consumo y solicitudes.</p>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-white bg-white shadow-sm text-dark border" t-on-click="loadDashboardData">
+                    <button class="btn btn-primary shadow-sm border" t-on-click="loadDashboardData">
                         <i class="fa fa-refresh me-1 text-primary"></i> Sincronizar Datos
                     </button>
                 </div>

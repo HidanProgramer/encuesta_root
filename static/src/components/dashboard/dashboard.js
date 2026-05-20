@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { CComponent, onWillStart, onMounted, useRef, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart, onMounted, useRef, useState, useEffect } from "@odoo/owl";
 
 // --- SUB-COMPONENTE GENÉRICO PARA UN GRÁFICO (REUTILIZABLE) ---
 class DashboardChart extends Component {
@@ -39,7 +39,7 @@ class DashboardChart extends Component {
         });
     }
 }
-DashboardChart.template = "encuestas_root.DashboardChartTemplate";
+DashboardChart.template = "encuesta_root.DashboardChartTemplate";
 
 
 // --- COMPONENTE PRINCIPAL DEL DASHBOARD ---
@@ -124,5 +124,5 @@ export class ClientesDashboard extends Component {
 
 // Vinculación y registro final
 ClientesDashboard.components = { DashboardChart }; // Inyectamos el subcomponente
-ClientesDashboard.template = "encuestas_root.ClientesDashboardTemplate";
-registry.category("actions").add("encuestas_root.ClientesDashboard", ClientesDashboard);
+ClientesDashboard.template = "encuesta_root.ClientesDashboardTemplate";
+registry.category("actions").add("encuesta_root.ClientesDashboard", ClientesDashboard);
