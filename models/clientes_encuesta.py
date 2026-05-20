@@ -233,8 +233,9 @@ class Clientes(models.Model):
     @api.model
     def get_dashboard_stats(self):
         """
-        Retorna las métricas agregadas para las KPI cards de forma eficiente.
+        Retorna las métricas agregadas para las KPI cards y la data formateada para los 4 gráficos de forma eficiente.
         """
+        # KPI CARDS
         # 1. Total de encuestas
         total_encuestas = self.search_count([])
         
@@ -247,11 +248,89 @@ class Clientes(models.Model):
         # 4. Total Sistema 2 kW
         total_2kw = self.search_count([('sistema_recomendado', '=', '2kw')])
 
+                # --- 2. Data para Gráficos utilizando agrupaciones eficientes ---
+        
+        # Gráfico 1: Tipo de Sistema (1kw vs 2kw)
+        # Filtramos para excluir los rechazados en este gráfico si se desea ver solo lo asignado
+        sistemas_data = self.read_group(
+            [('sistema_recomendado', 'in', ['1kw', '2kw'])], 
+            ['sistema_recomendado'], 
+            ['sistema_recommended' if 'sistema_recommended' in self._fields else 'sistema_recomendado']
+        )
+        sistemas_labels = []
+        sistemas_values = []
+        for line in sistemas_data:
+            label = 'Sistema 1 kW' if line.get('sistema_recomendado') == '1kw' else 'Sistema 2 kW'
+            sistemas_labels.append(label)
+            sistemas_values.append(line.get('sistema_recomendado_count', 0))
+
+        # Gráfico 2: Tipo de Electrificación (Grupo Electrógeno, SFV, Sin servicio, Red)
+        electrificacion_data = self.read_group([], ['tipo_servicio_energetico'], ['tipo_servicio_energetico'])
+        elec_mapping = {
+            'no_service': 'Sin Servicio Eléctrico',
+            'sfv': 'Sistema Fotovoltaico',
+            'ge': 'Grupo Electrógeno',
+            'red': 'Red Eléctrica'
+        }
+        elec_labels = []
+        elec_values = []
+        for line in electrificacion_data:
+            key = line.get('tipo_servicio_energetico')
+            if key:
+                elec_labels.append(elec_mapping.get(key, key))
+                elec_values.append(line.get('tipo_servicio_energetico_count', 0))
+
+        # Gráfico 3: Cantidad de Sistemas por Municipios (Barras Apiladas/Agrupadas)
+        municipios_data = self.read_group(
+            [('sistema_recomendado', 'in', ['1kw', '2kw'])],
+            ['municipio', 'sistema_recomendado'],
+            ['municipio', 'sistema_recomendado'],
+            lazy=False
+        )
+        
+        # Procesar estructura para gráfico de barras agrupadas por municipio
+        municipios_set = sorted(list(set(line.get('municipio') for line in municipios_data if line.get('municipio'))))
+        m_1kw = {m: 0 for m in municipios_set}
+        m_2kw = {m: 0 for m in municipios_set}
+        for line in municipios_data:
+            m = line.get('municipio')
+            if m:
+                if line.get('sistema_recomendado') == '1kw':
+                    m_1kw[m] = line.get('__count', 0)
+                elif line.get('sistema_recomendado') == '2kw':
+                    m_2kw[m] = line.get('__count', 0)
+
+        # Gráfico 4: Estado de Evaluación (Aprobados 1kw, Aprobados 2kw, Rechazados)
+        evaluacion_data = self.read_group([], ['sistema_recomendado'], ['sistema_recommended' if 'sistema_recommended' in self._fields else 'sistema_recommended'])
+        eval_labels = ['Aprobados 1 kW', 'Aprobados 2 kW', 'Rechazados']
+        eval_values = [0, 0, 0]
+        for line in evaluacion_data:
+            sys_type = line.get('sistema_recomendado')
+            count = line.get('sistema_recomendado_count', 0)
+            if sys_type == '1kw':
+                eval_values[0] = count
+            elif sys_type == '2kw':
+                eval_values[1] = count
+            elif sys_type == 'rechazado':
+                eval_values[2] = count
+
         return {
-            'total_encuestas': total_encuestas,
-            'total_aprobados': total_aprobados,
-            'total_1kw': total_1kw,
-            'total_2kw': total_2kw,
+            'cards': {
+                'total_encuestas': total_encuestas,
+                'total_aprobados': total_aprobados,
+                'total_1kw': total_1kw,
+                'total_2kw': total_2kw,
+            },
+            'charts': {
+                'sistemas': {'labels': list(sistemas_labels), 'values': list(sistemas_values)},
+                'electrificacion': {'labels': list(elec_labels), 'values': list(elec_values)},
+                'municipios': {
+                    'labels': municipios_set,
+                    'dataset_1kw': [m_1kw[m] for m in municipios_set],
+                    'dataset_2kw': [m_2kw[m] for m in municipios_set]
+                },
+                'evaluacion': {'labels': eval_labels, 'values': eval_values}
+            }
         }
 
 
