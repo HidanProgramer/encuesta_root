@@ -5,7 +5,7 @@
     'author': 'HiddanProgrammer',
     'website': 'https://github.com/HidanProgramer/encuesta',
     'summary': 'Sistema Básico para gestionar encuestas',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': ['security/ir.model.access.csv',
              'views/graph_views.xml',
              'views/view_clientes_encuesta.xml',
@@ -14,7 +14,8 @@
              'views/view_encuesta_nucleo_inherit.xml',
              'views/view_encuesta_actividad_inherit.xml',
              'views/view_encuesta_aspectos_inherit.xml',
-             'views/view_encuesta_criterios_inherit.xml'],
+             'views/view_encuesta_criterios_inherit.xml',
+             'views/view_dashboard.xml'],
     'assets': {
         'web.assets_backend': [
             'encuesta_root/static/src/components/dashboard/dashboard.js',
