@@ -1,93 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
-    <t t-name="encuesta_root.ClientesDashboardTemplate">
-        <div class="o_dashboards p-4" style="background-color: #f8f9fa; min-height: 100vh;">
+    
+    <t t-name="encuestas_root.DashboardChartTemplate">
+        <div style="position: relative; height: 260px; width: 100%;">
+            <canvas t-ref="chartCanvas"/>
+        </div>
+    </t>
+
+    <t t-name="encuestas_root.ClientesDashboardTemplate">
+        <div class="o_dashboards p-4" style="background-color: #f4f6f9; min-height: 100vh; overflow-y: auto;">
+            
             <div class="row mb-4 align-items-center">
                 <div class="col">
-                    <h2 class="fw-bold text-dark mb-1">Dashboard de Control</h2>
-                    <p class="text-muted small mb-0">Monitoreo en tiempo real de encuestas y evaluaciones técnicas.</p>
+                    <h2 class="fw-bold text-dark mb-1">Dashboard de Control Fotovoltaico</h2>
+                    <p class="text-muted small mb-0">Análisis estadístico e indicadores de auto-consumo y solicitudes.</p>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-primary shadow-sm" t-on-click="loadDashboardData">
-                        <i class="fa fa-refresh me-1"></i> Actualizar
+                    <button class="btn btn-white bg-white shadow-sm text-dark border" t-on-click="loadDashboardData">
+                        <i class="fa fa-refresh me-1 text-primary"></i> Sincronizar Datos
                     </button>
                 </div>
             </div>
 
-            <div class="row g-3 mb-5">
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
-                         t-on-click="() => this.openListView([], 'Todas las Encuestas')"
-                         style="border-left: 5px solid #0056b3 !important; transition: transform 0.2s;">
-                        <div class="card-body d-flex align-items-center justify-content-between">
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-xl-3" t-on-click="() => this.openListView([], 'Todas las Encuestas')">
+                    <div class="card border-0 shadow-sm p-3 cursor-pointer" style="border-left: 4px solid #0d6efd !important;">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Total Encuestas</h6>
-                                <h3 class="fw-bold mb-0 text-dark"><t t-esc="stats.total_encuestas"/></h3>
+                                <span class="text-muted small text-uppercase fw-bold">Total Encuestas</span>
+                                <h3 class="fw-bold mb-0 mt-1"><t t-esc="state.cards.total_encuestas"/></h3>
                             </div>
-                            <div class="rounded-circle bg-primary bg-opacity-10 p-3">
-                                <i class="fa fa-clipboard text-primary fa-2x"></i>
-                            </div>
+                            <div class="bg-primary bg-opacity-10 text-primary rounded p-3"><i class="fa fa-file-text fa-2x"/></div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
-                         t-on-click="() => this.openListView([['estado_evaluacion', '=', 'aprobado']], 'Casos Aprobados')"
-                         style="border-left: 5px solid #198754 !important;">
-                        <div class="card-body d-flex align-items-center justify-content-between">
+                <div class="col-12 col-sm-6 col-xl-3" t-on-click="() => this.openListView([['estado_evaluacion', '=', 'aprobado']], 'Casos Aprobados')">
+                    <div class="card border-0 shadow-sm p-3 cursor-pointer" style="border-left: 4px solid #28a745 !important;">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Aprobados</h6>
-                                <h3 class="fw-bold mb-0 text-success"><t t-esc="stats.total_aprobados"/></h3>
+                                <span class="text-muted small text-uppercase fw-bold">Aprobados Total</span>
+                                <h3 class="fw-bold text-success mb-0 mt-1"><t t-esc="state.cards.total_aprobados"/></h3>
                             </div>
-                            <div class="rounded-circle bg-success bg-opacity-10 p-3">
-                                <i class="fa fa-check-circle text-success fa-2x"></i>
-                            </div>
+                            <div class="bg-success bg-opacity-10 text-success rounded p-3"><i class="fa fa-check-circle fa-2x"/></div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
-                         t-on-click="() => this.openListView([['sistema_recomendado', '=', '1kw']], 'Sistemas Recomendados 1 kW')"
-                         style="border-left: 5px solid #ffc107 !important;">
-                        <div class="card-body d-flex align-items-center justify-content-between">
+                <div class="col-12 col-sm-6 col-xl-3" t-on-click="() => this.openListView([['sistema_recomendado', '=', '1kw']], 'Sistemas 1 kW')">
+                    <div class="card border-0 shadow-sm p-3 cursor-pointer" style="border-left: 4px solid #ffc107 !important;">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Sistemas 1 kW</h6>
-                                <h3 class="fw-bold mb-0 text-warning"><t t-esc="stats.total_1kw"/></h3>
+                                <span class="text-muted small text-uppercase fw-bold">Sistemas 1 kW</span>
+                                <h3 class="fw-bold text-warning mb-0 mt-1"><t t-esc="state.cards.total_1kw"/></h3>
                             </div>
-                            <div class="rounded-circle bg-warning bg-opacity-10 p-3">
-                                <i class="fa fa-sun-o text-warning fa-2x"></i>
-                            </div>
+                            <div class="bg-warning bg-opacity-10 text-warning rounded p-3"><i class="fa fa-sun-o fa-2x"/></div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden cursor-pointer" 
-                         t-on-click="() => this.openListView([['sistema_recomendado', '=', '2kw']], 'Sistemas Recomendados 2 kW')"
-                         style="border-left: 5px solid #0dcaf0 !important;">
-                        <div class="card-body d-flex align-items-center justify-content-between">
+                <div class="col-12 col-sm-6 col-xl-3" t-on-click="() => this.openListView([['sistema_recomendado', '=', '2kw']], 'Sistemas 2 kW')">
+                    <div class="card border-0 shadow-sm p-3 cursor-pointer" style="border-left: 4px solid #0dcaf0 !important;">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Sistemas 2 kW</h6>
-                                <h3 class="fw-bold mb-0 text-info"><t t-esc="stats.total_2kw"/></h3>
+                                <span class="text-muted small text-uppercase fw-bold">Sistemas 2 kW</span>
+                                <h3 class="fw-bold text-info mb-0 mt-1"><t t-esc="state.cards.total_2kw"/></h3>
                             </div>
-                            <div class="rounded-circle bg-info bg-opacity-10 p-3">
-                                <i class="fa fa-bolt text-info fa-2x"></i>
-                            </div>
+                            <div class="bg-info bg-opacity-10 text-info rounded p-3"><i class="fa fa-bolt fa-2x"/></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="p-5 border border-dashed rounded-3 text-center bg-white text-muted">
-                        <i class="fa fa-bar-chart fa-3x mb-3 text-opacity-50"></i>
-                        <h5>Sección de Gráficas Próximamente</h5>
-                        <p class="small">Aquí podrás instanciar tus futuros componentes Owl utilizando Chart.js o ApexCharts.</p>
+            <div class="row g-4">
+                
+                <div class="col-12 col-lg-6">
+                    <div class="card border-0 shadow-sm p-3 h-100">
+                        <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Distribución por Tipo de Sistema</h5>
+                        <DashboardChart type="'pie'" data="sistemaChartData"/>
                     </div>
                 </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="card border-0 shadow-sm p-3 h-100">
+                        <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Estado de Electrificación Inicial</h5>
+                        <DashboardChart type="'doughnut'" data="electrificacionChartData"/>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="card border-0 shadow-sm p-3 h-100">
+                        <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Capacidad de Sistemas por Municipio</h5>
+                        <DashboardChart type="'bar'" data="municipiosChartData" options="{scales: {y: {beginAtZero: true, stacked: false}}}"/>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="card border-0 shadow-sm p-3 h-100">
+                        <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Estado Resolutivo de Evaluaciones</h5>
+                        <DashboardChart type="'pie'" data="evaluacionChartData"/>
+                    </div>
+                </div>
+
             </div>
         </div>
     </t>
