@@ -16,7 +16,7 @@
                     <p class="text-muted small mb-0">Análisis estadístico e indicadores de auto-consumo y solicitudes.</p>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-primary shadow-sm border" t-on-click="loadDashboardData">
+                    <button class="btn btn-white bg-white shadow-sm text-dark border" t-on-click="loadDashboardData">
                         <i class="fa fa-refresh me-1 text-primary"></i> Sincronizar Datos
                     </button>
                 </div>
