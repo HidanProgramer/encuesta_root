@@ -18,6 +18,7 @@
              'views/view_dashboard.xml'],
     'assets': {
         'web.assets_backend': [
+            'encuesta_root/static/src/libs/chart.umd.js',
             'encuesta_root/static/src/components/dashboard/dashboard.js',
             'encuesta_root/static/src/components/dashboard/dashboard.xml',
         ],
