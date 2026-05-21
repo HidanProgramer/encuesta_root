@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, onMounted, useRef, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart, onMounted, onWillUnmount, useRef, useState, useEffect } from "@odoo/owl";
 
 // --- SUB-COMPONENTE GENÉRICO PARA UN GRÁFICO (REUTILIZABLE) ---
 class DashboardChart extends Component {
@@ -13,30 +13,66 @@ class DashboardChart extends Component {
             this.renderChart();
         });
 
+        onWillUnmount(() => {
+            if (this.chart){
+                this.chart.destroy();
+            }
+        });
+
         // Re-renderizar si las propiedades cambian dinámicamente
         useEffect(() => {
             if (this.chart) {
-                this.chart.destroy();
-                this.renderChart();
+                this.chart.data = this.props.data;
+                this.chart.update();
             }
-        }, () => [this.props.data]);
+        }, () => [JSON.stringify(this.props.data)]);
     }
 
     renderChart() {
         const ctx = this.canvasRef.el.getContext("2d");
         // 'Chart' es expuesto globalmente por chart.umd.js cargado en los assets
         this.chart = new Chart(ctx, {
-            type: this.props.type,
-            data: this.props.data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                ...this.props.options
+    type: this.props.type,
+    data: this.props.data,
+
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                position: 'bottom'
             }
-        });
+        },
+
+        onClick: (event, elements) => {
+
+            if (!elements.length) {
+                return;
+            }
+
+            const element = elements[0];
+
+            const clickData = {
+                datasetIndex: element.datasetIndex,
+                index: element.index,
+                label: this.props.data.labels[element.index],
+                datasetLabel:
+                    this.props.data.datasets[element.datasetIndex]?.label || null,
+                value:
+                    this.props.data.datasets[element.datasetIndex]?.data[element.index]
+            };
+
+            // Ejecutar callback enviado por el padre
+            if (this.props.onChartClick) {
+                this.props.onChartClick(clickData);
+            }
+        },
+
+        ...this.props.options
+    }
+});
+
     }
 }
 DashboardChart.template = "encuesta_root.DashboardChartTemplate";
@@ -101,10 +137,15 @@ export class ClientesDashboard extends Component {
     }
 
     get evaluacionChartData() {
+        const values = this.state.charts.evaluacion?.values || [0, 0, 0];
         return {
-            labels: this.state.charts.evaluacion.labels,
+            labels: ["Aprobados 1 kW", "Aprobados 2 kW", "Rechazados"],
             datasets: [{
-                data: this.state.charts.evaluacion.values,
+                data: [
+                    values[0] || 0,
+                    values[1] || 0,
+                    values[2] || 0,
+                ],
                 backgroundColor: ['#28a745', '#17a2b8', '#dc3545']
             }]
         };
@@ -115,14 +156,72 @@ export class ClientesDashboard extends Component {
             type: "ir.actions.act_window",
             name: title,
             res_model: "clientes.encuesta",
+            view_mode: "list,form",
             views: [[false, "list"], [false, "form"]],
             domain: domain,
-            target: "current",
+            target: "current"
         });
+    }
+
+    onMunicipiosChartClick(data) {
+
+        const sistema =
+            data.datasetIndex === 0
+                ? '1kw'
+                : '2kw';
+
+        this.openListView(
+            [
+                ['municipio', '=', data.label],
+                ['sistema_recomendado', '=', sistema]
+            ],
+            `${data.label} - ${data.datasetLabel}`
+        );
+    }
+
+    onSistemaChartClick(data) {
+
+        const sistema =
+            data.label.includes('1')
+                ? '1kw'
+                : '2kw';
+
+        this.openListView(
+            [['sistema_recomendado', '=', sistema]],
+            data.label
+        );
+    }
+
+    onElectrificacionChartClick(data) {
+        const mapping = {
+            'Sistema Fotovoltaico': 'sfv',
+            'Grupo Electrógeno': 'ge',
+            'Sin Servicio Eléctrico': 'no_service',
+            'Red Eléctrica': 'red'
+        };
+        const value = mapping[data.label];
+        if (!value) return;
+
+        this.openListView(
+            [['tipo_servicio_energetico', '=', value]],
+            data.label
+            );
+        }
+
+    onEvaluacionChartClick(data) {
+        let domain = [];
+        if (data.index === 0) {
+            domain = [['estado_evaluacion', '=', 'aprobado'], ['sistema_recomendado', '=', '1kw']];
+        } else if (data.index === 1) {
+            domain = [['estado_evaluacion', '=', 'aprobado'], ['sistema_recomendado', '=', '2kw']];
+        } else if (data.index === 2) {
+            domain = [['estado_evaluacion', '=', 'rechazado']];
+        }
+        this.openListView(domain, `Evaluación: ${data.label}`);
     }
 }
 
 // Vinculación y registro final
-ClientesDashboard.components = { DashboardChart }; // Inyectamos el subcomponente
+ClientesDashboard.components = { DashboardChart };
 ClientesDashboard.template = "encuesta_root.ClientesDashboardTemplate";
 registry.category("actions").add("encuesta_root.ClientesDashboard", ClientesDashboard);

@@ -3,7 +3,7 @@
     
     <t t-name="encuesta_root.DashboardChartTemplate">
         <div style="position: relative; height: 260px; width: 100%;">
-            <canvas t-ref="chartCanvas"/>
+            <canvas t-ref="chartCanvas" style="cursor: pointer;"/>
         </div>
     </t>
 
@@ -74,21 +74,21 @@
                 <div class="col-12 col-lg-6">
                     <div class="card border-0 shadow-sm p-3 h-100">
                         <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Distribución por Tipo de Sistema</h5>
-                        <DashboardChart type="'pie'" data="sistemaChartData"/>
+                        <DashboardChart type="'pie'" data="sistemaChartData" onChartClick.bind="onSistemaChartClick"/>
                     </div>
                 </div>
 
                 <div class="col-12 col-lg-6">
                     <div class="card border-0 shadow-sm p-3 h-100">
                         <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Estado de Electrificación Inicial</h5>
-                        <DashboardChart type="'doughnut'" data="electrificacionChartData"/>
+                        <DashboardChart type="'doughnut'" data="electrificacionChartData" onChartClick.bind="onElectrificacionChartClick"/>
                     </div>
                 </div>
 
                 <div class="col-12 col-lg-6">
                     <div class="card border-0 shadow-sm p-3 h-100">
                         <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Capacidad de Sistemas por Municipio</h5>
-                        <DashboardChart type="'bar'" data="municipiosChartData" options="{responsive: true,
+                        <DashboardChart type="'bar'" data="municipiosChartData" onChartClick.bind="onMunicipiosChartClick" options="{responsive: true,
                         plugins: {legend: {position: 'bottom'}}, scales: {x: {stacked: true} , y: {beginAtZero: true, stacked: true}}}"/>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                 <div class="col-12 col-lg-6">
                     <div class="card border-0 shadow-sm p-3 h-100">
                         <h5 class="fw-bold text-dark mb-3 small text-uppercase tracking-wider">Estado Resolutivo de Evaluaciones</h5>
-                        <DashboardChart type="'pie'" data="evaluacionChartData"/>
+                        <DashboardChart type="'pie'" data="evaluacionChartData" onChartClick.bind="onEvaluacionChartClick"/>
                     </div>
                 </div>
 
