@@ -271,7 +271,7 @@ class Clientes(models.Model):
                 raise ValidationError("Los minutos de longitud deben estar entre 0 y 59.")
             if not (0 <= rec.lat_seg < 60):
                 raise ValidationError("Los segundos de latitud deben estar entre 0 y 59.")
-            if not (0 <= rec.lot_seg < 60):
+            if not (0 <= rec.lon_seg < 60):
                 raise ValidationError("Los segundos de latitud deben estar entre 0 y 59.")
     
     

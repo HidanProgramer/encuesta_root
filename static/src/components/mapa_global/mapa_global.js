@@ -49,7 +49,7 @@ export class MapaGlobalEncuestas extends Component {
                 // Diseño del globo flotante (Popup)
                 const popupContent = `
                     <div style="font-family: sans-serif; padding: 5px;">
-                        <h6 style="margin: 0 0 5px 0; color: #0d2b52;">${encuesta.name}</h6>
+                        <h6 style="margin: 0 0 5px 0; color: #0d2b52;">${encuesta.cliente}</h6>
                         <p style="margin: 0 0 3px 0; font-size: 12px;"><strong>Municipio:</strong> ${encuesta.municipio || 'No definido'}</p>
                         <p style="margin: 0 0 8px 0; font-size: 12px;"><strong>Sistema:</strong> ${encuesta.sistema_recomendado || 'No definido'}</p>
                         <button class="btn btn-primary btn-sm w-100 open-encuesta-btn" data-id="${encuesta.id}" style="font-size: 11px; padding: 3px 8px;">
