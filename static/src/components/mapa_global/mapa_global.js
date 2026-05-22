@@ -30,7 +30,7 @@ export class MapaGlobalEncuestas extends Component {
         const encuestas = await this.orm.searchRead(
             "clientes.encuesta", // Modelo técnico
             [],                  // Dominio (vacío para traer todos los registros)
-            ["id", "name", "latitud", "longitud", "municipio", "sistema_recomendado"] // Campos a leer
+            ["id", "cliente", "latitud", "longitud", "municipio", "sistema_recomendado"] // Campos a leer
         );
 
         // 2. Inicializar el mapa de Leaflet centrado en la provincia

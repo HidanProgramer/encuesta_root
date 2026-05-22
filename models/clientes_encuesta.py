@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class Clientes(models.Model):
     _name = 'clientes.encuesta'
@@ -9,18 +10,26 @@ class Clientes(models.Model):
     municipio = fields.Char(string='Municipio', required=True)
     c_popular = fields.Char(string='Consejo Popular', required=True)
     comunidad = fields.Char(string='Comunidad', required=True)
-    fecha_enc = fields.Date(string='Fecha de Encuesta', required=True)
-    latitud = fields.Float(string='Latitud', default=0.0, digits=(10,7))
-    longitud = fields.Float(string='Longitud', default=0.0, digits=(10,7))
-    
+    fecha_enc = fields.Date(string='Fecha de Encuesta', required=True)    
     # Campos para coordenadas en DMS
     lat_deg = fields.Integer("⁰")
     lat_min = fields.Integer("'")
     lat_seg = fields.Float('"', digits=(10,2))
+    lat_dir = fields.Selection([
+        ('N', 'Norte'),
+        ('S', 'Sur')
+    ], default="N")
     
     lon_deg = fields.Integer("⁰")
     lon_min = fields.Integer("'")
     lon_seg = fields.Float('"', digits=(10,2))
+    lon_dir = fields.Selection([
+        ('E', 'Este'),
+        ('W', 'Oeste')
+    ], default="W")
+    
+    latitud = fields.Float(string='Latitud', default=0.0, digits=(10,6), compute="_compute_coordenadas_decimales", store=True)
+    longitud = fields.Float(string='Longitud', default=0.0, digits=(10,6), compute="_compute_coordenadas_decimales", store=True)
     
     # ======================================
     # Pestaña Caracteristicas de la vivienda
@@ -229,6 +238,42 @@ class Clientes(models.Model):
                 rec.tipo_servicio_energetico = 'ge'
             else:
                 rec.tipo_servicio_energetico = 'red'
+    
+    @api.depends('lat_deg', 'lat_min', 'lat_seg', 'lon_deg', 'lon_min', 'lon_seg', 'lat_dir', 'lon_dir')
+    def _compute_coordenadas_decimales(self):
+        
+        for rec in self:
+            # Calculo de la Latitud
+            rec.latitud = (
+                abs(rec.lat_deg) + (rec.lat_min / 60.0) + (rec.lat_seg / 3600.0)
+            )
+            
+            # Sur Negativo
+            if rec.lat_dir == 'S':
+                rec.latitud *= -1
+            
+            # Calculo de la Longitud
+            rec.longitud = (
+                abs(rec.lon_deg) + (rec.lon_min / 60.0) + (rec.lon_seg / 3600.0)
+            )
+            
+            # Oeste Negativo
+            if rec.lon_dir == 'W':
+                rec.longitud *= -1
+    
+    @api.constrains('lat_deg', 'lat_min', 'lat_seg', 'lon_deg', 'lon_min', 'lon_seg')
+    def _check_coordenadas(self):
+        
+        for rec in self:
+            if not (0 <= rec.lat_min < 60):
+                raise ValidationError("Los minutos de latitud deben estar entre 0 y 59.")
+            if not (0 <= rec.lon_min < 60):
+                raise ValidationError("Los minutos de longitud deben estar entre 0 y 59.")
+            if not (0 <= rec.lat_seg < 60):
+                raise ValidationError("Los segundos de latitud deben estar entre 0 y 59.")
+            if not (0 <= rec.lot_seg < 60):
+                raise ValidationError("Los segundos de latitud deben estar entre 0 y 59.")
+    
     
     @api.model
     def get_dashboard_stats(self):
