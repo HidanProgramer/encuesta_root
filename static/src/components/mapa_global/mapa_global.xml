@@ -2,13 +2,28 @@
 
 <templates xml:space="preserve">
     <t t-name="encuesta_root.MapaGlobalTemplate" owl="1">
-        <div class="o_action h-100 w-100 d-flex flex-column bg-view">
-            <div class="o_control_panel d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-light">
-                <div class="o_cp_title">
-                    <span class="o_breadcrumb text-dark fw-bold h4 mb-0">Mapa de Geolocalización de Encuestas</span>
+        <div class="flex-grow-1 d-flex position-relative h-100">
+            <div class="bg-white border-end overflow-auto" style="width: 280px; min-width: 280px; z-index: 2;">
+                <div class="p-3 border-bottom bg-light">
+                    <strong class="text-uppercase text-muted" style="font-size: 11px;">Lista de Clientes</strong>
+                </div>
+                <div class="list-group list-group-flush">
+                    <t t-foreach="state.encuestas" t-as="encuesta" t-key="encuesta.id">
+                        <button type="button" 
+                            class="list-group-item list-group-item-action text-start p-3"
+                            t-on-click="() => this.seleccionarCliente(encuesta)">
+                            <div class="fw-bold text-truncate" style="font-size: 13px;">
+                                <t t-esc="encuesta.cliente"/>
+                            </div>
+                            <div class="text-muted" style="font-size: 11px;">
+                                <span class="badge bg-secondary me-1"><t t-esc="encuesta.municipio || 'S/M'"/></span>
+                                <t t-esc="encuesta.sistema_recomendado || 'No definido'"/>
+                            </div>
+                        </button>
+                    </t>
                 </div>
             </div>
-            <div class="flex-grow-1 position-relative">
+            <div class="flex-grow-1 h-100 position-relative">
                 <div t-ref="mapContainer" class="w-100 h-100" style="position: absolute; top:0; bottom:0; left:0; right:0; z-index: 1;"></div>
             </div>
         </div>

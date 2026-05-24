@@ -1,7 +1,6 @@
 /** @odoo-module */
-
 import { registry } from "@web/core/registry";
-import { Component, onMounted, useRef } from "@odoo/owl";
+import { Component, onMounted, useRef, useState } from "@odoo/owl"; // Importamos useState
 import { useService } from "@web/core/utils/hooks";
 
 export class MapaGlobalEncuestas extends Component {
@@ -9,8 +8,15 @@ export class MapaGlobalEncuestas extends Component {
 
     setup() {
         this.mapRef = useRef("mapContainer");
-        this.orm = useService("orm"); 
+        this.orm = useService("orm");
         this.actionService = useService("action");
+        
+        // 1. Estado reactivo para la barra lateral
+        this.state = useState({ encuestas: [] });
+        
+        // 2. Variables de control para Leaflet
+        this.map = null;
+        this.markers = {}; 
 
         onMounted(async () => {
             await this.initMap();
@@ -18,7 +24,6 @@ export class MapaGlobalEncuestas extends Component {
     }
 
     async initMap() {
-        // Blindaje de rutas para los marcadores de Leaflet en Odoo
         delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
             iconRetinaUrl: '/encuesta_root/static/src/libs/leaflet/images/marker-icon-2x.png',
@@ -26,27 +31,32 @@ export class MapaGlobalEncuestas extends Component {
             shadowUrl: '/encuesta_root/static/src/libs/leaflet/images/marker-shadow.png',
         });
 
-        // 1. Consultar los datos usando el ORM nativo de Odoo 18
+        // Consultar los datos usando el ORM
         const encuestas = await this.orm.searchRead(
-            "clientes.encuesta", // Modelo técnico
-            [],                  // Dominio (vacío para traer todos los registros)
-            ["id", "cliente", "latitud", "longitud", "municipio", "sistema_recomendado"] // Campos a leer
+            "clientes.encuesta",
+            [],
+            ["id", "cliente", "latitud", "longitud", "municipio", "sistema_recomendado"]
         );
 
-        // 2. Inicializar el mapa de Leaflet centrado en la provincia
-        const map = L.map(this.mapRef.el).setView([20.8872, -76.2631], 9);
+        // Guardamos en el estado para que se renderice el Tree View izquierdo automáticamente
+        this.state.encuestas = encuestas;
 
-        // 3. Cargar las capas de OpenStreetMap
+        // Inicializar el mapa asignándolo a la propiedad de la clase (this.map)
+        this.map = L.map(this.mapRef.el).setView([20.8872, -76.2631], 9);
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        }).addTo(this.map);
 
-        // 4. Recorrer las encuestas traídas por el ORM y pintar los pines
+        // Recorrer y pintar los pines
         encuestas.forEach(encuesta => {
             if (encuesta.latitud && encuesta.longitud) {
-                const marker = L.marker([encuesta.latitud, encuesta.longitud]).addTo(map);
+                const marker = L.marker([encuesta.latitud, encuesta.longitud]).addTo(this.map);
+                
+                // GUARDAR REFERENCIA: Indexamos el marcador por el ID de la encuesta
+                this.markers[encuesta.id] = marker;
 
-                // Diseño del globo flotante (Popup)
+                // Contenido del popup (usando cliente en vez de name)
                 const popupContent = `
                     <div style="font-family: sans-serif; padding: 5px;">
                         <h6 style="margin: 0 0 5px 0; color: #0d2b52;">${encuesta.cliente}</h6>
@@ -64,7 +74,6 @@ export class MapaGlobalEncuestas extends Component {
                     const btn = document.querySelector(`.open-encuesta-btn[data-id="${encuesta.id}"]`);
                     if (btn) {
                         btn.addEventListener('click', () => {
-                            // Acción nativa para ir al Form View del registro
                             this.actionService.doAction({
                                 type: 'ir.actions.act_window',
                                 res_model: 'clientes.encuesta',
@@ -78,7 +87,32 @@ export class MapaGlobalEncuestas extends Component {
             }
         });
     }
+
+    // 3. NUEVA FUNCIÓN: Se ejecuta al hacer clic en un cliente de la lista izquierda
+    seleccionarCliente(encuesta) {
+        const marker = this.markers[encuesta.id];
+        if (!marker) return;
+
+        // Resetear todos los pines a su color azul original (removiendo filtros CSS)
+        Object.values(this.markers).forEach(m => {
+            if (m._icon) m._icon.style.filter = "";
+        });
+
+        // Pintar ESTE pin específico de rojo usando filtros en el elemento HTML
+        if (marker._icon) {
+            // hue-rotate(140deg) rota el azul estándar hacia un tono rojo/rojo vivo
+            marker._icon.style.filter = "hue-rotate(140deg) saturate(250%) brightness(90%)";
+        }
+
+        // Desplazar el mapa suavemente (flyTo) hacia las coordenadas con un zoom más cercano (ej. 14)
+        this.map.flyTo([encuesta.latitud, encuesta.longitud], 14, {
+            animate: true,
+            duration: 1.5 // Duración de la animación en segundos
+        });
+
+        // Abrir el popup del marcador automáticamente
+        marker.openPopup();
+    }
 }
 
-// Registrar la acción de cliente
 registry.category("actions").add("action_mapa_global_encuestas", MapaGlobalEncuestas);
