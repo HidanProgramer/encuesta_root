@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { registry } from "@web/core/registry";
-import { Component, onMounted, useRef, useState } from "@odoo/owl"; // Importamos useState
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class MapaGlobalEncuestas extends Component {
@@ -11,15 +11,48 @@ export class MapaGlobalEncuestas extends Component {
         this.orm = useService("orm");
         this.actionService = useService("action");
         
-        // 1. Estado reactivo para la barra lateral
-        this.state = useState({ encuestas: [] });
+        this.state = useState({ 
+            encuestas: [],
+            searchTerm: "" 
+        });
         
-        // 2. Variables de control para Leaflet
         this.map = null;
         this.markers = {}; 
 
         onMounted(async () => {
             await this.initMap();
+        });
+    }
+
+    // 1. GETTER BLINDADO: Evita caídas por campos vacíos (undefined / false)
+    get filteredEncuestas() {
+        // Limpiamos el término de búsqueda de forma segura
+        const term = (this.state.searchTerm || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+        
+        if (!term) {
+            return this.state.encuestas || [];
+        }
+
+        // Función interna ultra-segura para procesar textos sin romper el flujo
+        const cleanText = (val) => {
+            if (!val) return ""; // Si es false, null o undefined, devolvemos texto vacío
+            return String(val)
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        };
+
+        return (this.state.encuestas || []).filter(encuesta => {
+            // Evaluamos cada campo convirtiéndolo primero a texto seguro
+            const matchCliente = cleanText(encuesta.cliente).includes(term);
+            const matchMunicipio = cleanText(encuesta.municipio).includes(term);
+            const matchSistema = cleanText(encuesta.sistema_recommended_label).includes(term);
+
+            return matchCliente || matchMunicipio || matchSistema;
         });
     }
 
@@ -31,37 +64,66 @@ export class MapaGlobalEncuestas extends Component {
             shadowUrl: '/encuesta_root/static/src/libs/leaflet/images/marker-shadow.png',
         });
 
-        // Consultar los datos usando el ORM
+        // Consensuamos los campos pedidos al ORM
         const encuestas = await this.orm.searchRead(
             "clientes.encuesta",
             [],
             ["id", "cliente", "latitud", "longitud", "municipio", "sistema_recomendado"]
         );
 
-        // Guardamos en el estado para que se renderice el Tree View izquierdo automáticamente
-        this.state.encuestas = encuestas;
+        // =========================================================================
+        // DICCIONARIO CON LAS CLAVES EXACTAS DE TU PYTHON
+        // =========================================================================
+        const sistemasDiccionario = {
+            '1kw': 'Sistema 1 kW',
+            '2kw': 'Sistema 2 kW',
+            'rechazado': 'Rechazado'
+        };
 
-        // Inicializar el mapa asignándolo a la propiedad de la clase (this.map)
+        // Procesamos los datos mapeando los resultados antes de guardarlos en el estado
+        this.state.encuestas = encuestas.map(encuesta => {
+            
+            // Tratamiento seguro de Municipio (por si viene como Many2one o Texto)
+            let nombreMunicipio = "";
+            if (Array.isArray(encuesta.municipio)) {
+                nombreMunicipio = encuesta.municipio[1]; 
+            } else if (encuesta.municipio) {
+                nombreMunicipio = encuesta.municipio;
+            }
+
+            // Tratamiento del Selection técnico
+            const claveTecnica = encuesta.sistema_recomendado;
+            
+            // Si la clave existe en el diccionario, extrae su etiqueta; si no, muestra la clave
+            const etiquetaLegible = sistemasDiccionario[claveTecnica] || claveTecnica || "No definido";
+
+            return {
+                ...encuesta,
+                cliente: encuesta.cliente || "Sin Nombre",
+                municipio: nombreMunicipio || "No definido",
+                sistema_recommended_label: etiquetaLegible // Guardamos el texto final listo para pintar y filtrar
+            };
+        });
+
+        // Inicialización del Mapa
         this.map = L.map(this.mapRef.el).setView([20.8872, -76.2631], 9);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(this.map);
 
-        // Recorrer y pintar los pines
-        encuestas.forEach(encuesta => {
+        // Dibujar Marcadores
+        this.state.encuestas.forEach(encuesta => {
             if (encuesta.latitud && encuesta.longitud) {
                 const marker = L.marker([encuesta.latitud, encuesta.longitud]).addTo(this.map);
-                
-                // GUARDAR REFERENCIA: Indexamos el marcador por el ID de la encuesta
                 this.markers[encuesta.id] = marker;
 
-                // Contenido del popup (usando cliente en vez de name)
+                // Modificamos el contenido del popup para que consuma la etiqueta ya traducida
                 const popupContent = `
                     <div style="font-family: sans-serif; padding: 5px;">
                         <h6 style="margin: 0 0 5px 0; color: #0d2b52;">${encuesta.cliente}</h6>
-                        <p style="margin: 0 0 3px 0; font-size: 12px;"><strong>Municipio:</strong> ${encuesta.municipio || 'No definido'}</p>
-                        <p style="margin: 0 0 8px 0; font-size: 12px;"><strong>Sistema:</strong> ${encuesta.sistema_recomendado || 'No definido'}</p>
+                        <p style="margin: 0 0 3px 0; font-size: 12px;"><strong>Municipio:</strong> ${encuesta.municipio}</p>
+                        <p style="margin: 0 0 8px 0; font-size: 12px;"><strong>Sistema:</strong> ${encuesta.sistema_recommended_label}</p>
                         <button class="btn btn-primary btn-sm w-100 open-encuesta-btn" data-id="${encuesta.id}" style="font-size: 11px; padding: 3px 8px;">
                             Ver Formulario
                         </button>
@@ -69,7 +131,6 @@ export class MapaGlobalEncuestas extends Component {
                 `;
                 marker.bindPopup(popupContent);
 
-                // Evento para capturar el clic en el botón del Popup
                 marker.on('popupopen', () => {
                     const btn = document.querySelector(`.open-encuesta-btn[data-id="${encuesta.id}"]`);
                     if (btn) {
@@ -88,29 +149,23 @@ export class MapaGlobalEncuestas extends Component {
         });
     }
 
-    // 3. NUEVA FUNCIÓN: Se ejecuta al hacer clic en un cliente de la lista izquierda
     seleccionarCliente(encuesta) {
         const marker = this.markers[encuesta.id];
         if (!marker) return;
 
-        // Resetear todos los pines a su color azul original (removiendo filtros CSS)
         Object.values(this.markers).forEach(m => {
             if (m._icon) m._icon.style.filter = "";
         });
 
-        // Pintar ESTE pin específico de rojo usando filtros en el elemento HTML
         if (marker._icon) {
-            // hue-rotate(140deg) rota el azul estándar hacia un tono rojo/rojo vivo
             marker._icon.style.filter = "hue-rotate(140deg) saturate(250%) brightness(90%)";
         }
 
-        // Desplazar el mapa suavemente (flyTo) hacia las coordenadas con un zoom más cercano (ej. 14)
         this.map.flyTo([encuesta.latitud, encuesta.longitud], 14, {
             animate: true,
-            duration: 1.5 // Duración de la animación en segundos
+            duration: 1.5
         });
 
-        // Abrir el popup del marcador automáticamente
         marker.openPopup();
     }
 }

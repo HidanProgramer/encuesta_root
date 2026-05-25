@@ -4,22 +4,35 @@
     <t t-name="encuesta_root.MapaGlobalTemplate" owl="1">
         <div class="flex-grow-1 d-flex position-relative h-100">
             <div class="bg-white border-end overflow-auto" style="width: 280px; min-width: 280px; z-index: 2;">
-                <div class="p-3 border-bottom bg-light">
-                    <strong class="text-uppercase text-muted" style="font-size: 11px;">Lista de Clientes</strong>
+                <div class="p-3 border-bottom bg-light position-sticky top-0 bg-white" style="z-index: 3;">
+                    <label class="text-uppercase text-muted fw-bold d-block mb-2" style="font-size: 11px;">Filtrar Encuestas</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white text-muted border-end-0">
+                            <i class="oi oi-search"/> </span>
+                        <input type="text" 
+                            class="form-control border-start-0 ps-1" 
+                            placeholder="Buscar cliente, municipio o sistema..."
+                            t-model="state.searchTerm" /> </div>
                 </div>
                 <div class="list-group list-group-flush">
-                    <t t-foreach="state.encuestas" t-as="encuesta" t-key="encuesta.id">
+                    <t t-foreach="filteredEncuestas" t-as="encuesta" t-key="encuesta.id">
                         <button type="button" 
-                            class="list-group-item list-group-item-action text-start p-3"
-                            t-on-click="() => this.seleccionarCliente(encuesta)">
+                                class="list-group-item list-group-item-action text-start p-3"
+                                t-on-click="() => this.seleccionarCliente(encuesta)">
                             <div class="fw-bold text-truncate" style="font-size: 13px;">
                                 <t t-esc="encuesta.cliente"/>
                             </div>
                             <div class="text-muted" style="font-size: 11px;">
                                 <span class="badge bg-secondary me-1"><t t-esc="encuesta.municipio || 'S/M'"/></span>
-                                <t t-esc="encuesta.sistema_recomendado || 'No definido'"/>
+                                <t t-esc="encuesta.sistema_recommended_label || 'No definido'"/>
                             </div>
                         </button>
+                    </t>
+                    
+                    <t t-if="filteredEncuestas.length === 0">
+                        <div class="p-3 text-center text-muted" style="font-size: 13px;">
+                            No se encontraron coincidencias.
+                        </div>
                     </t>
                 </div>
             </div>
