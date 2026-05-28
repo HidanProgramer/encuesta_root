@@ -32,7 +32,7 @@
             'encuesta_root/static/src/components/mapa_global/mapa_global.xml',
         ],
     },
-    'images': ['static/description/banner.jpg'],
+    'images': ['static/description/banner.png'],
     'license': 'LGPL-3',
     'installable': True,
     'application': True,
