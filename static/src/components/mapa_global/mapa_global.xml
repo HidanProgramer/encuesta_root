@@ -1,42 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <templates xml:space="preserve">
-    <t t-name="encuesta_root.MapaGlobalTemplate" owl="1">
-        <div class="flex-grow-1 d-flex position-relative h-100">
-            <div class="bg-white border-end overflow-auto" style="width: 280px; min-width: 280px; z-index: 2;">
-                <div class="p-3 border-bottom bg-light position-sticky top-0 bg-white" style="z-index: 3;">
-                    <label class="text-uppercase text-muted fw-bold d-block mb-2" style="font-size: 11px;">Filtrar Encuestas</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-white text-muted border-end-0">
-                            <i class="oi oi-search"/> </span>
-                        <input type="text" 
-                            class="form-control border-start-0 ps-1" 
-                            placeholder="Buscar cliente, municipio o sistema..."
-                            t-model="state.searchTerm" /> </div>
-                </div>
-                <div class="list-group list-group-flush">
-                    <t t-foreach="filteredEncuestas" t-as="encuesta" t-key="encuesta.id">
+    <t t-name="encuesta_root.MapaGlobalTemplate">
+        <div class="d-flex w-100 h-100 bg-100" style="overflow: hidden;">
+            
+            <div class="d-flex flex-column bg-white border-end shadow-sm" style="width: 320px; min-width: 320px; z-index: 2;">
+                
+                <div class="p-3 border-bottom bg-light">
+                    <h6 class="text-uppercase fw-bold text-muted small mb-2">Modo de Visualización</h6>
+                    <div class="btn-group w-100 shadow-sm" role="group">
                         <button type="button" 
-                                class="list-group-item list-group-item-action text-start p-3"
+                                t-attf-class="btn btn-sm #{this.state.currentMode === 'markers' ? 'btn-primary' : 'btn-outline-primary'}"
+                                t-on-click="() => this.changeViewMode('markers')">
+                            <i class="fa fa-map-marker me-1"/> Pines
+                        </button>
+                        <button type="button" 
+                                t-attf-class="btn btn-sm #{this.state.currentMode === 'heatmap' ? 'btn-danger' : 'btn-outline-danger'}"
+                                t-on-click="() => this.changeViewMode('heatmap')">
+                            <i class="fa fa-fire me-1"/> Mapa de Calor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-3 border-bottom">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fa fa-search text-muted"></i>
+                        </span>
+                        <input type="text" 
+                               class="form-control border-start-0 ps-1" 
+                               placeholder="Buscar por cliente o municipio..."
+                               t-model="this.state.searchTerm"/>
+                    </div>
+                </div>
+
+                <div class="flex-grow-1 overflow-auto list-group list-group-flush">
+                    <t t-foreach="this.filteredEncuestas" t-as="encuesta" t-key="encuesta.id">
+                        <button class="list-group-item list-group-item-action p-3 d-flex flex-column gap-1 border-bottom align-items-start"
                                 t-on-click="() => this.seleccionarCliente(encuesta)">
-                            <div class="fw-bold text-truncate" style="font-size: 13px;">
-                                <t t-esc="encuesta.cliente"/>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <span class="fw-bold text-dark text-truncate" style="max-width: 180px;">
+                                    <t t-esc="encuesta.cliente"/>
+                                </span>
+                                <span class="badge rounded-pill bg-primary-subtle text-primary small">
+                                    <t t-esc="encuesta.municipio"/>
+                                </span>
                             </div>
-                            <div class="text-muted" style="font-size: 11px;">
-                                <span class="badge bg-secondary me-1"><t t-esc="encuesta.municipio || 'S/M'"/></span>
-                                <t t-esc="encuesta.sistema_recommended_label || 'No definido'"/>
+                            <div class="d-flex w-100 justify-content-between align-items-center mt-1">
+                                <small class="text-muted">
+                                    <i class="fa fa-bolt me-1"/> <t t-esc="encuesta.sistema_recomendado"/>
+                                </small>
                             </div>
                         </button>
                     </t>
-                    
-                    <t t-if="filteredEncuestas.length === 0">
-                        <div class="p-3 text-center text-muted" style="font-size: 13px;">
-                            No se encontraron coincidencias.
+                    <t t-if="this.filteredEncuestas.length === 0">
+                        <div class="p-4 text-center text-muted">
+                            <i class="fa fa-folder-open-o fa-2x mb-2 d-block text-400"></i>
+                            No se encontraron encuestas
                         </div>
                     </t>
                 </div>
             </div>
-            <div class="flex-grow-1 h-100 position-relative">
+
+            <div class="flex-grow-1 position-relative">
                 <div t-ref="mapContainer" class="w-100 h-100" style="position: absolute; top:0; bottom:0; left:0; right:0; z-index: 1;"></div>
             </div>
         </div>
