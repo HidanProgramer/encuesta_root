@@ -61,12 +61,12 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Características Vivienda" name="tab_vivienda"/>
-                        <page string="Servicio Eléctrico" name="tab_servicio"/>
-                        <page string="Núcleo Familiar" name="tab_nucleo"/>
-                        <page string="Actividad Productiva" name="tab_actividad"/>
-                        <page string="Aspectos Limitantes" name="tab_aspectos"/>
-                        <page string="Criterios de Selección" name="tab_criterios"/>
+                        <page string="🏠Características Vivienda" name="tab_vivienda"/>
+                        <page string="⚡Servicio Eléctrico" name="tab_servicio"/>
+                        <page string="👥Núcleo Familiar" name="tab_nucleo"/>
+                        <page string="🚜Actividad Productiva" name="tab_actividad"/>
+                        <page string="⚠️Aspectos Limitantes" name="tab_aspectos"/>
+                        <page string="🎯Criterios de Selección" name="tab_criterios"/>
                     </notebook>
                 </sheet>
             </form>
