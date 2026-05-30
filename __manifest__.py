@@ -27,6 +27,11 @@
             # Librería del Mapa Global
             'encuesta_root/static/src/libs/leaflet/leaflet.css',
             'encuesta_root/static/src/libs/leaflet/leaflet.js',
+            # Librería de los Plugins
+            'encuesta_root/static/src/libs/leaflet/plugins/MarkerCluster.css',
+            'encuesta_root/static/src/libs/leaflet/plugins/MarkerCluster.Default.css',
+            'encuesta_root/static/src/libs/leaflet/plugins/leaflet.markercluster.js',
+            'encuesta_root/static/src/libs/leaflet/plugins/leaflet-heat.js',
             # Componente Mapa Global
             'encuesta_root/static/src/components/mapa_global/mapa_global.js',
             'encuesta_root/static/src/components/mapa_global/mapa_global.xml',
