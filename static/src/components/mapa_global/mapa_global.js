@@ -143,7 +143,7 @@ export class MapaGlobalEncuestas extends Component {
                     <div style="font-family: sans-serif; padding: 3px; min-width: 150px;">
                         <h6 style="margin: 0 0 6px 0; color: #0d2b52; font-weight: bold;">${encuesta.cliente}</h6>
                         <p style="margin: 0 0 4px 0; font-size: 12px; color: #555;"><strong>Muncipio:</strong> ${encuesta.municipio}</p>
-                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #555;"><strong>Recomendación:</strong> ${encuesta.sistema_recomndado || encuesta.sistema_recomendado}</p>
+                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #555;"><strong>Recomendación:</strong> ${encuesta.sistema_recomendado || encuesta.sistema_recomendado}</p>
                         <button class="btn btn-primary btn-sm w-100 open-encuesta-btn-popup" data-id="${encuesta.id}" style="font-size: 11px; padding: 2px 5px;">
                             <i class="fa fa-folder-open"></i> Ver Detalles
                         </button>
@@ -186,7 +186,7 @@ export class MapaGlobalEncuestas extends Component {
                 // Seteamos la intensidad base según el tipo de sistema (para dar peso en el mapa)
                 let intensidad = 0.5; 
                 if (encuesta.sistema_recomendado.includes("2 kW")) intensidad = 1.0; // Más potencia = Más calor
-                if (encuesta.sistema_recommended === "rechazado") intensidad = 0.1; // Menos peso
+                if (encuesta.sistema_recomendado === "rechazado") intensidad = 0.1; // Menos peso
 
                 heatPoints.push([encuesta.latitud, encuesta.longitud, intensidad]);
             }
