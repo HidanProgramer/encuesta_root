@@ -8,8 +8,11 @@ class Clientes(models.Model):
     cliente = fields.Char(string='Cliente', required=True)
     ci = fields.Char(string='CI', required=True)
     municipio = fields.Char(string='Municipio', required=True)
+    municipio_id = fields.Many2one('encuestas.municipios', string="Municipio", required=True)
     c_popular = fields.Char(string='Consejo Popular', required=True)
+    consejo_popular_id = fields.Many2one('encuestas.consejo_popular', string="Consejo Popular", required=True)
     comunidad = fields.Char(string='Comunidad', required=True)
+    comunidad_id  = fields.Many2one('encuestas.municipios', string="Comunidad", required=True)
     fecha_enc = fields.Date(string='Fecha de Encuesta', required=True)    
     # Campos para coordenadas en DMS
     lat_deg = fields.Integer("⁰")
@@ -377,6 +380,15 @@ class Clientes(models.Model):
                 'evaluacion': {'labels': eval_labels, 'values': eval_values}
             }
         }
+    
+    @api_onchange('municipio_id')
+    def _onchange_municipio_id(self):
+        self.consejo_popular_id = False
+        self.comunidad_id = False
+    
+    @api_onchange('consejo_popular_id')
+    def _onchange_consejo_popular_id(self):
+        self.comunidad_id = False
 
 
             
