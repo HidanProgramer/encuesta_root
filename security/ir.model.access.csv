@@ -3,3 +3,6 @@ access_clientes_encuesta,access_clientes_encuesta,model_clientes_encuesta,base.g
 access_ssfv_ingresos_hogar,access_ssfv_ingresos_hogar,model_ssfv_ingresos_hogar,base.group_user,1,1,1,1
 access_ssfv_producto,access_ssfv_producto,model_ssfv_producto,base.group_user,1,1,1,1
 access_ssfv_nucleo_familiar,access_ssfv_nucleo_familiar,model_ssfv_nucleo_familiar,base.group_user,1,1,1,1
+access_encuestas_municipios,access_encuestas_municipios,model_encuestas_municipios,base.group_user,1,1,1,1
+access_encuestas_consejo_popular,access_encuestas_consejo_popular,model_encuestas_consejo_popular,base.group_user,1,1,1,1
+access_encuestas_comunidad,access_encuestas_comunidad,model_encuestas_comunidad,base.group_user,1,1,1,1

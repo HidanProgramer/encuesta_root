@@ -12,7 +12,7 @@ class Clientes(models.Model):
     c_popular = fields.Char(string='Consejo Popular', required=True)
     consejo_popular_id = fields.Many2one('encuestas.consejo_popular', string="Consejo Popular", required=True)
     comunidad = fields.Char(string='Comunidad', required=True)
-    comunidad_id  = fields.Many2one('encuestas.municipios', string="Comunidad", required=True)
+    comunidad_id  = fields.Many2one('encuestas.comunidad', string="Comunidad", required=True)
     fecha_enc = fields.Date(string='Fecha de Encuesta', required=True)    
     # Campos para coordenadas en DMS
     lat_deg = fields.Integer("⁰")
@@ -303,7 +303,7 @@ class Clientes(models.Model):
         sistemas_data = self.read_group(
             [('sistema_recomendado', 'in', ['1kw', '2kw'])], 
             ['sistema_recomendado'], 
-            ['sistema_recommended' if 'sistema_recommended' in self._fields else 'sistema_recomendado']
+            ['sistema_recomendado' if 'sistema_recomendado' in self._fields else 'sistema_recomendado']
         )
         sistemas_labels = []
         sistemas_values = []
@@ -361,7 +361,7 @@ class Clientes(models.Model):
                 eval_values[1] = count
             elif sys_type == 'rechazado':
                 eval_values[2] = count
-
+                
         return {
             'cards': {
                 'total_encuestas': total_encuestas,
@@ -381,14 +381,11 @@ class Clientes(models.Model):
             }
         }
     
-    @api_onchange('municipio_id')
+    @api.onchange('municipio_id')
     def _onchange_municipio_id(self):
         self.consejo_popular_id = False
         self.comunidad_id = False
     
-    @api_onchange('consejo_popular_id')
+    @api.onchange('consejo_popular_id')
     def _onchange_consejo_popular_id(self):
         self.comunidad_id = False
-
-
-            

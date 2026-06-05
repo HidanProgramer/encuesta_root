@@ -51,9 +51,12 @@
                             </div>
                         </group>
                         <group>
-                            <field name="c_popular"/>
-                            <field name="municipio"/>
-                            <field name="comunidad"/>
+                            <field name="municipio_id"/>
+                            <field name="consejo_popular_id" domain="[('municipio_id', '=', municipio_id)]"
+                            readonly="not municipio_id"/>
+                            <field name="comunidad_id"
+                            domain="[('consejo_popular_id', '=', consejo_popular_id)]"
+                            readonly="not consejo_popular_id"/>
                             <label string='Longitud' for="lat_deg"/>
                             <div class="o_row d-flex">
                                 <field name="lon_deg" nolabel="1" class="flex-grow-0 pe-1" style="min-width: 30px"/><span class="me-2">⁰</span>
