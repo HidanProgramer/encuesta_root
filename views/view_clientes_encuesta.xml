@@ -9,9 +9,9 @@
                 <field name="cliente"/>
                 <field name="ci"/>
                 <field name="fecha_enc"/>
-                <field name="municipio"/>
-                <field name="c_popular"/>
-                <field name="comunidad"/>
+                <field name="municipio_id"/>
+                <field name="consejo_popular_id"/>
+                <field name="comunidad_id"/>
                 <field name="sistema_recomendado" widget="badge"
                 decoration-info="sistema_recomendado == '1kw'"
                 decoration-success="sistema_recomendado == '2kw'"

@@ -17,7 +17,7 @@
         <field name="model">clientes.encuesta</field>
         <field name="arch" type="xml">
             <graph string="Sistemas por Municipio" type="bar" stacked="1" sample="1">
-                <field name="municipio" type="row"/>
+                <field name="municipio_id" type="row"/>
                 <field name="sistema_recomendado" type="col"/>
             </graph>
         </field>
@@ -28,7 +28,7 @@
         <field name="model">clientes.encuesta</field>
         <field name="arch" type="xml">
             <pivot string="Tabla de Análisis de Encuestas" sample="1">
-                <field name="municipio" type="row"/>
+                <field name="municipio_id" type="row"/>
                 <field name="estado_evaluacion" type="row"/>
                 <field name="sistema_recomendado" type="col"/>
             </pivot>

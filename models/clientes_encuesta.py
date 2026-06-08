@@ -7,11 +7,11 @@ class Clientes(models.Model):
 
     cliente = fields.Char(string='Cliente', required=True)
     ci = fields.Char(string='CI', required=True)
-    municipio = fields.Char(string='Municipio', required=True)
+    # municipio = fields.Char(string='Municipio', required=True)
     municipio_id = fields.Many2one('encuestas.municipios', string="Municipio", required=True)
-    c_popular = fields.Char(string='Consejo Popular', required=True)
+    # c_popular = fields.Char(string='Consejo Popular', required=True)
     consejo_popular_id = fields.Many2one('encuestas.consejo_popular', string="Consejo Popular", required=True)
-    comunidad = fields.Char(string='Comunidad', required=True)
+    # comunidad = fields.Char(string='Comunidad', required=True)
     comunidad_id  = fields.Many2one('encuestas.comunidad', string="Comunidad", required=True)
     fecha_enc = fields.Date(string='Fecha de Encuesta', required=True)    
     # Campos para coordenadas en DMS
@@ -331,22 +331,34 @@ class Clientes(models.Model):
         # Gráfico 3: Cantidad de Sistemas por Municipios (Barras Apiladas/Agrupadas)
         municipios_data = self.read_group(
             [('sistema_recomendado', 'in', ['1kw', '2kw'])],
-            ['municipio', 'sistema_recomendado'],
-            ['municipio', 'sistema_recomendado'],
+            ['municipio_id', 'sistema_recomendado'],
+            ['municipio_id', 'sistema_recomendado'],
             lazy=False
         )
         
         # Procesar estructura para gráfico de barras agrupadas por municipio
-        municipios_set = sorted(list(set(line.get('municipio') for line in municipios_data if line.get('municipio'))))
+        municipios_set = sorted(list(set(line.get('municipio_id') for line in municipios_data if line.get('municipio_id'))), key=lambda x: x[1])
         m_1kw = {m: 0 for m in municipios_set}
         m_2kw = {m: 0 for m in municipios_set}
         for line in municipios_data:
-            m = line.get('municipio')
+            m = line.get('municipio_id')
             if m:
-                if line.get('sistema_recomendado') == '1kw':
-                    m_1kw[m] = line.get('__count', 0)
-                elif line.get('sistema_recomendado') == '2kw':
-                    m_2kw[m] = line.get('__count', 0)
+                sys_val = line.get('sistema_recomendado')
+                if isinstance(sys_val, tuple):
+                    sys_val = sys_val[1]
+                
+                sys_str = str(sys_val).lower().strip() if sys_val else ""
+                count = line.get('__count') or line.get('municipio_count') or 0
+                
+                if '1kw' in sys_str:
+                    m_1kw[m] = count
+                elif '2kw' in sys_str:
+                    m_2kw[m] = count
+        
+        labels_municipios = [m[1] if isinstance(m, tuple) else m for m in municipios_set]
+        ids_municipios = [m[0] if isinstance(m, tuple) else m for m in municipios_set]
+        dataset_1kw_values = [m_1kw[m] for m in municipios_set]
+        dataset_2kw_values = [m_2kw[m] for m in municipios_set]
 
         # Gráfico 4: Estado de Evaluación (Aprobados 1kw, Aprobados 2kw, Rechazados)
         evaluacion_data = self.read_group([], ['sistema_recomendado'], ['sistema_recomendado' if 'sistema_recomendado' in self._fields else 'sistema_recomendado'])
@@ -373,9 +385,10 @@ class Clientes(models.Model):
                 'sistemas': {'labels': list(sistemas_labels), 'values': list(sistemas_values)},
                 'electrificacion': {'labels': list(elec_labels), 'values': list(elec_values)},
                 'municipios': {
-                    'labels': municipios_set,
-                    'dataset_1kw': [m_1kw[m] for m in municipios_set],
-                    'dataset_2kw': [m_2kw[m] for m in municipios_set]
+                    'labels': labels_municipios,
+                    'ids': ids_municipios,
+                    'dataset_1kw': dataset_1kw_values,
+                    'dataset_2kw': dataset_2kw_values,
                 },
                 'evaluacion': {'labels': eval_labels, 'values': eval_values}
             }
