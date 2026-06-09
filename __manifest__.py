@@ -25,7 +25,6 @@
     'summary': 'Sistema Básico para gestionar encuestas',
     'depends': ['base', 'web'],
     'data': ['security/ir.model.access.csv',
-             'views/graph_views.xml',
              'views/view_clientes_encuesta.xml',
              'views/view_encuesta_vivienda_inherit.xml',
              'views/view_encuesta_servicio_inherit.xml',
@@ -34,7 +33,9 @@
              'views/view_encuesta_aspectos_inherit.xml',
              'views/view_encuesta_criterios_inherit.xml',
              'views/view_dashboard.xml',
-             'views/view_mapa_global.xml'],
+             'views/view_mapa_global.xml',
+             'report/report_encuesta_actions.xml',
+             'report/report_encuesta_templates.xml'],
     'assets': {
         'web.assets_backend': [
             # Librería del Dashboard

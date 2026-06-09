@@ -85,40 +85,7 @@
         <field name="view_mode">list,form</field>
     </record>
     
-    <record id="action_grafico_1" model="ir.actions.act_window">
-        <field name="name">Estado de Evaluación</field>
-        <field name="res_model">clientes.encuesta</field>
-        <field name="view_mode">graph,pivot</field>
-        <field name="view_id" ref="view_encuesta_graph_estado"/>
-    </record>
-
-    <record id="action_grafico_2" model="ir.actions.act_window">
-        <field name="name">Sistemas por Municipio</field>
-        <field name="res_model">clientes.encuesta</field>
-        <field name="view_mode">graph,pivot</field>
-        <field name="view_id" ref="view_clientes_encuesta_bar_municipio"/>
-    </record>
-
-    <record id="action_grafico_3" model="ir.actions.act_window">
-        <field name="name">Servicio Energético</field>
-        <field name="res_model">clientes.encuesta</field>
-        <field name="view_mode">graph</field>
-        <field name="view_id" ref="view_encuesta_graph_servicio_energetico"/>
-    </record>
-
-    <record id="action_grafico_4" model="ir.actions.act_window">
-        <field name="name">Tipo Viviendas</field>
-        <field name="res_model">clientes.encuesta</field>
-        <field name="view_mode">graph</field>
-        <field name="view_id" ref="view_encuesta_graph_tipo_vivienda"/>
-    </record>
-
     <menuitem id="menu_proyectos_root" name="Proyectos" sequence="10"/>
-    <menuitem id="menu_analisis_root" name="Informes" sequence="20"/>
 
     <menuitem id="menu_clientes_encuesta" name="Encuestas" parent="menu_proyectos_root" action="action_clientes_encuesta" sequence="10"/>
-    <menuitem id="menu_grafico_1" name="Estado de Evaluación" parent="menu_analisis_root" action="action_grafico_1" sequence="10"/>
-    <menuitem id="menu_grafico_2" name="Sistemas por Municipios" parent="menu_analisis_root" action="action_grafico_2" sequence="10"/>
-    <menuitem id="menu_grafico_3" name="Servicio Energético" parent="menu_analisis_root" action="action_grafico_3" sequence="10"/>
-    <menuitem id="menu_grafico_4" name="Tipos de Viviendas" parent="menu_analisis_root" action="action_grafico_4" sequence="10"/>    
 </odoo>

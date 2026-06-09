@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_encuesta_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.internal_layout">
+                    <div class="page" style="font-size: 13px; font-family: Arial, sans-serif;">
+                        
+                        <div class="text-center mb-4">
+                            <h2 style="color: #0d47a1; font-weight: bold; text-transform: uppercase;">Expediente de Encuesta Técnica</h2>
+                            <h4 class="text-muted">Sistema Propuesto: <span t-field="doc.sistema_recomendado"/></h4>
+                        </div>
+
+                        <div class="row mb-4 border-bottom pb-2">
+                            <div class="col-6">
+                                <strong>Cliente:</strong> <span t-field="doc.cliente"/><br/>
+                                <strong>CI:</strong> <span t-field="doc.ci"/><br/>
+                                <strong>Fecha Encuesta:</strong> <span t-field="doc.fecha_enc"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Estado de Evaluación:</strong> 
+                                <span t-field="doc.estado_evaluacion" style="text-transform: uppercase; font-weight: bold;"/>
+                            </div>
+                        </div>
+
+                        <h4 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">1. Ubicación de la Vivienda</h4>
+                        <table class="table table-sm table-bordered mt-2 text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Municipio</th>
+                                    <th>Consejo Popular</th>
+                                    <th>Comunidad</th>
+                                    <th>Latitud</th>
+                                    <th>Longitud</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span t-field="doc.municipio_id.name"/></td>
+                                    <td><span t-field="doc.consejo_popular_id.name"/></td>
+                                    <td><span t-field="doc.comunidad_id.name"/></td>
+                                    <td><span t-field="doc.latitud"/></td>
+                                    <td><span t-field="doc.longitud"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">2. Características de la Vivienda</h4>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <strong>Tipo de Vivienda:</strong> <span t-field="doc.tipo_vivienda"/><br/>
+                                <t t-if="doc.tipo_vivienda == 'finca'">
+                                    <strong>Actividad:</strong> <span t-field="doc.tipo_finca"/><br/>
+                                </t>
+                                <strong>Condición general:</strong> <span t-field="doc.condicion_vivienda"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Materiales:</strong> 
+                                <t t-if="doc.material_madera">Madera, </t>
+                                <t t-if="doc.material_mamposteria">Mampostería, </t>
+                                <t t-if="doc.material_otro"><span t-field="doc.otro_material"/></t>
+                                <br/>
+                                <strong>Divisiones:</strong>
+                                <t t-if="doc.divisiones">
+                                    <t t-if="doc.sala">Sala, </t><t t-if="doc.comedor">Comedor, </t>
+                                    <t t-if="doc.cocina">Cocina, </t><t t-if="doc.cuartos">Cuartos, </t>
+                                    <t t-if="doc.banos">Baños</t>
+                                </t>
+                                <t t-else="">No posee</t>
+                            </div>
+                        </div>
+
+                        <p style="page-break-before:always;"> </p>
+
+                        <h4 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">3. Servicio Eléctrico y Núcleo Familiar</h4>
+                        <p><strong>Tipo de Servicio Actual:</strong> <span t-field="doc.tipo_servicio_energetico"/></p>
+                        
+                        <table class="table table-sm table-bordered mt-2 text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th colspan="4">Miembros del Hogar (Total: <span t-field="doc.total_personas"/>)</th>
+                                </tr>
+                                <tr>
+                                    <th>Parentesco/Grupo</th>
+                                    <th>Sexo</th>
+                                    <th>Edad</th>
+                                    <th>Escolaridad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.nucleo_familiar_ids" t-as="fam">
+                                    <tr>
+                                        <td><span t-esc="fam.grupo_nucleo or 'No definido'"/></td> 
+                                        <td><span t-esc="fam.sexo_nucleo if 'sexo_nucleo' in fam else 'N/A'"/></td>
+                                        <td><span t-esc="fam.edad_nucleo if 'edad_nucleo' in fam else 'N/A'"/></td>
+                                        <td><span t-esc="fam.escolaridad if 'escolaridad' in fam else 'N/A'"/></td>
+                                    </tr>
+                                </t>
+                                <t t-if="not doc.nucleo_familiar_ids">
+                                    <tr><td colspan="4" class="text-muted">No se registraron miembros del núcleo.</td></tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <h4 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">4. Aspectos Limitantes (Prioridad)</h4>
+                        <div class="row">
+                            <div class="col-6">
+                                <ul>
+                                    <li>Energía Eléctrica: <strong><span t-field="doc.limit_energia"/></strong></li>
+                                    <li>Meteorología: <strong><span t-field="doc.limit_meteorologia"/></strong></li>
+                                </ul>
+                            </div>
+                            <div class="col-6">
+                                <ul>
+                                    <li>Seguridad: <strong><span t-field="doc.limit_seguridad"/></strong></li>
+                                    <li>Falta de Mano de Obra: <strong><span t-field="doc.limit_mano_obra"/></strong></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">5. Criterios de Selección</h4>
+                        <table class="table table-sm table-striped mt-2">
+                            <tbody>
+                                <tr>
+                                    <td>Condición Socioeconómica de la mujer</td>
+                                    <td class="text-end fw-bold"><span t-field="doc.criterio_mujer"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Número de Beneficiarios</td>
+                                    <td class="text-end fw-bold"><span t-field="doc.criterio_beneficiario"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Condiciones de Seguridad</td>
+                                    <td class="text-end fw-bold"><span t-field="doc.criterio_seguridad"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Disponibilidad de Equipos</td>
+                                    <td class="text-end fw-bold"><span t-field="doc.criterio_disponibilidad"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Uso productivo de la Energía</td>
+                                    <td class="text-end fw-bold"><span t-field="doc.criterio_uso_productivo"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="alert alert-secondary mt-4">
+                            <strong>Dictamen del Sistema:</strong> <span t-field="doc.observacion_automatica"/><br/>
+                            <strong>Aprovechamiento propuesto:</strong> <span t-field="doc.aprovechamiento_energia"/><br/>
+                            <t t-if="doc.emprende_negocio == 'si'">
+                                <strong>Negocio a emprender:</strong> <span t-field="doc.negocio_descripcion"/>
+                            </t>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

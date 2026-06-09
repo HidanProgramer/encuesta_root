@@ -7,7 +7,7 @@
         <field name="report_type">qweb-html</field>
         <field name="report_name">encuesta_root.report_encuesta_template</field>
         <field name="report_file">encuesta_root.report_encuesta_template</field>
-        <field name="print_report_name">'Encuesta_%s' % (object.name or 'Sin_Nombre')</field>
+        <field name="print_report_name">'Encuesta_%s' % (object.cliente or 'Sin_Nombre')</field>
         <field name="binding_model_id" ref="model_clientes_encuesta"/>
         <field name="binding_type">report</field>
     </record>
