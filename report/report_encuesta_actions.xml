@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="action_report_encuesta_individual" model="ir.actions.report">
+        <field name="name">Imprimir Encuesta</field>
+        <field name="model">clientes.encuesta</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">encuesta_root.report_encuesta_template</field>
+        <field name="report_file">encuesta_root.report_encuesta_template</field>
+        <field name="print_report_name">'Encuesta_%s' % (object.name or 'Sin_Nombre')</field>
+        <field name="binding_model_id" ref="model_clientes_encuesta"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

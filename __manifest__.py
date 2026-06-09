@@ -18,7 +18,7 @@
 #############################################################################
 {
     'name': 'Gestión de Encuestas',
-    'version': "18.0.1.6.0",
+    'version': "18.0.1.6.1",
     'category': 'Industries',
     'author': 'HiddanProgrammer',
     'website': 'https://github.com/HidanProgramer/encuesta',
