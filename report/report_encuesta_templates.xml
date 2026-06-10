@@ -90,10 +90,10 @@
                             <tbody>
                                 <t t-foreach="doc.nucleo_familiar_ids" t-as="fam">
                                     <tr>
-                                        <td><span t-esc="fam.grupo_nucleo or 'No definido'"/></td> 
-                                        <td><span t-esc="fam.sexo_nucleo if 'sexo_nucleo' in fam else 'N/A'"/></td>
-                                        <td><span t-esc="fam.edad_nucleo if 'edad_nucleo' in fam else 'N/A'"/></td>
-                                        <td><span t-esc="fam.escolaridad if 'escolaridad' in fam else 'N/A'"/></td>
+                                        <td><span t-field="fam.grupo_nucleo"/></td> 
+                                        <td><span t-field="fam.sexo_nucleo"/></td>
+                                        <td><span t-field="fam.edad_nucleo"/></td>
+                                        <td><span t-field="fam.escolaridad"/></td>
                                     </tr>
                                 </t>
                                 <t t-if="not doc.nucleo_familiar_ids">

@@ -143,6 +143,9 @@ class Clientes(models.Model):
         ('red','Red Eléctrica')
     ], string="Tipo de Servicio Eléctrico", compute="_compute_tipo_servicio", store=True)
     
+    mapa_captura = fields.Binary(string="Captura Automática del mapa", attachment=True)
+    
+    
     # ======================
     # APIS
     # ======================
