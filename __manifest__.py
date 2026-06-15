@@ -54,6 +54,7 @@
             # Componente Mapa Global
             'encuesta_root/static/src/components/mapa_global/mapa_global.js',
             'encuesta_root/static/src/components/mapa_global/mapa_global.xml',
+            'encuesta_root/static/src/components/mapa_global/form_map_capture.js'
         ],
     },
     'images': ['static/description/banner.png'],

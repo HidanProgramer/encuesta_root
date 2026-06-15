@@ -1,5 +1,10 @@
+import base64
+import logging
+import requests
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
 
 class Clientes(models.Model):
     _name = 'clientes.encuesta'
@@ -143,7 +148,8 @@ class Clientes(models.Model):
         ('red','Red Eléctrica')
     ], string="Tipo de Servicio Eléctrico", compute="_compute_tipo_servicio", store=True)
     
-    mapa_captura = fields.Binary(string="Captura Automática del mapa", attachment=True)
+    mapa_imagen = fields.Binary(string="Mapa de Ubicacion", attachment=True, readonly=True,
+                               help="Imagen del mapa generada automaticamente segun latitud y longitud")
     
     
     # ======================
@@ -405,3 +411,54 @@ class Clientes(models.Model):
     @api.onchange('consejo_popular_id')
     def _onchange_consejo_popular_id(self):
         self.comunidad_id = False
+    
+    def generar_mapa(self):
+        """ Conecta con la API de LocationIQ, descarga el mapa con el marcador y lo guarda """
+        API_KEY = self.env['ir.config_parameter'].sudo().get_param('locationiq_api_key', default='pk.d3ae897f3f90119a7605b1be8ba1767b')
+        
+        for rec in self:
+            if not rec.latitud or not rec.longitud:
+                continue
+            
+            try:
+                # 1. Cambia la URL base a la de LocationIQ
+                url = "https://maps.locationiq.com/v3/staticmap"
+                
+                # 2. Configura los parámetros específicos de LocationIQ
+                params = {
+                    'key': API_KEY,                                       # Usa 'key' en lugar de 'key' de google
+                    'center': f"{rec.latitud},{rec.longitud}",
+                    'zoom': '16',
+                    'size': '800x450',
+                    'format': 'png',
+                    'maptype': 'streets',                                 # Tema del mapa
+                    'markers': f"icon:large-red-cutout|{rec.latitud},{rec.longitud}" # Marcador estilo pin rojo
+                }
+                
+                response = requests.get(url, params=params, timeout=10)
+                
+                if response.status_code == 200:
+                    rec.mapa_imagen = base64.b64encode(response.content).decode('ascii')
+                    _logger.info("Mapa de LocationIQ generado con éxito.")
+                else:
+                    _logger.error("Error en LocationIQ API: %s - %s", response.status_code, response.text)
+                    
+            except Exception as e:
+                _logger.exception("Error de conexión con LocationIQ: %s", str(e))
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        # Al guardar un registro nuevo, genera el mapa
+        records.generar_mapa()
+        return records
+    
+    def write(self, vals):
+        res = super().write(vals)
+        # Si cambiaste cualquier dato de las coordenadas GMS, vuelve a generar el mapa al guardar
+        campos_geo = ['lat_deg', 'lat_min', 'lat_seg', 'lat_dir',
+                      'lon_deg', 'lon_min', 'lon_seg', 'lon_dir']
+        if any(campo in vals for campo in campos_geo):
+            self.invalidate_recordset(['latitud', 'longitud'])
+            self.generar_mapa()
+        return res

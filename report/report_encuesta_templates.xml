@@ -44,6 +44,23 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="row mt-3">
+                            <div class="col-12 text-center">
+                                <h3 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">Mapa de la Vivienda</h3>
+                                <t t-if="doc.mapa_imagen">
+                                    <img t-att-src="image_data_uri(doc.mapa_imagen)"
+                                    style="max-width: 100%; border: 2px solid #0d47a1; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0,0,0,0.2);"/>
+                                    <div style="font-size: 8px; text-align: center; margin-top: 10px;">
+                                        Maps <a href='https://locationiq.com'>by LocationIQ.com</a>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div style="padding: 15px; border: 1px dashed #ccc; color: #777;" class="text-center">
+                                        <i>El mapa se generará automáticamente la próxima vez que se guarde el formulario.</i>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
 
                         <h4 style="color: #0d47a1; border-bottom: 2px solid #0d47a1;" class="mt-4 pb-1">2. Características de la Vivienda</h4>
                         <div class="row mt-2">
