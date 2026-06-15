@@ -148,9 +148,19 @@ class Clientes(models.Model):
         ('red','Red Eléctrica')
     ], string="Tipo de Servicio Eléctrico", compute="_compute_tipo_servicio", store=True)
     
+    # ======================================
+    # Campos para Mapa
+    # ======================================
     mapa_imagen = fields.Binary(string="Mapa de Ubicacion", attachment=True, readonly=True,
                                help="Imagen del mapa generada automaticamente segun latitud y longitud")
     
+    # ======================================
+    # Campos para Attachment
+    # ======================================
+    attachment_ids = fields.Many2many(
+        'ir.attachment',
+        string='Fotos y Croquis'
+    )    
     
     # ======================
     # APIS
