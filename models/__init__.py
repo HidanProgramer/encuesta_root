@@ -5,5 +5,6 @@ from . import ssfv_nucleo_familiar
 from . import encuestas_municipios
 from . import encuestas_consejo_popular
 from . import encuestas_comunidad
+from . import foto_attachment
 
 
