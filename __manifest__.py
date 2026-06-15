@@ -18,7 +18,7 @@
 #############################################################################
 {
     'name': 'Gestión de Encuestas',
-    'version': "18.0.1.6.1",
+    'version': "18.0.1.7.1",
     'category': 'Industries',
     'author': 'HiddanProgrammer',
     'website': 'https://github.com/HidanProgramer/encuesta',
@@ -54,7 +54,6 @@
             # Componente Mapa Global
             'encuesta_root/static/src/components/mapa_global/mapa_global.js',
             'encuesta_root/static/src/components/mapa_global/mapa_global.xml',
-            'encuesta_root/static/src/components/mapa_global/form_map_capture.js'
         ],
     },
     'images': ['static/description/banner.png'],

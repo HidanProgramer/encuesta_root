@@ -47,3 +47,15 @@
 #### UPDT
 
 - Fixed some bugs.
+
+### Version 18.0.1.7.0
+
+### UPDT
+
+- Added Qweb report
+
+### Version 18.0.1.7.1
+
+### ADD
+
+- Added to Qweb report an image of the map
