@@ -169,12 +169,6 @@ class Clientes(models.Model):
         string='Equipos'
     )
     
-    foto_croquis_ids = fields.Many2many(
-        'ir.attachment',
-        relation='encuesta_foto_croquis_rel',
-        string='Croquis'
-    )
-    
     # ======================
     # APIS
     # ======================

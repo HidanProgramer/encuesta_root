@@ -622,33 +622,6 @@
                                 <p class="dict-val" t-field="doc.negocio_descripcion"/>
                             </t>
                         </div>
-
-                        <!-- ══════════════════════════════════════════
-                             CROQUIS (página final)
-                        ══════════════════════════════════════════ -->
-                        <p style="page-break-before: always;"> </p>
-
-                        <table class="sec-tabla">
-                            <tr>
-                                <td class="sec-num" style="font-size:12px;">&#9998;</td>
-                                <td class="sec-titulo">Croquis de la Vivienda</td>
-                            </tr>
-                        </table>
-
-                        <div class="foto-caja">
-                            <div class="foto-hdr">Croquis</div>
-                            <div class="foto-body">
-                                <t t-if="doc.foto_croquis_ids">
-                                    <t t-set="cq" t-value="doc.foto_croquis_ids[0]"/>
-                                    <img t-att-src="'/web/image/%s' % cq.id"
-                                         style="max-width:150%; max-height:350px; width:auto; height:auto;"/>
-                                </t>
-                                <t t-else="">
-                                    <div class="foto-placeholder">No se adjunto croquis de la vivienda.</div>
-                                </t>
-                            </div>
-                        </div>
-
                     </div><!-- /page -->
                 </t>
             </t>

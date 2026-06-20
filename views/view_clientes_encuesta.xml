@@ -86,12 +86,6 @@
                                     string="Adjunte aqui las Fotos de Equipos 👉"
                                     context="{'default_tipo_foto': 'equipo'}"/>
                             </group>
-                            <group string="✎ Croquis de la Vivienda">
-                                <field name="foto_croquis_ids"
-                                    widget="many2many_binary"
-                                    string="Adjunte aqui las fotos del Croquis 👉"
-                                    context="{'default_tipo_foto': 'croquis'}"/>
-                            </group>
                         </page>
                     </notebook>
                 </sheet>
