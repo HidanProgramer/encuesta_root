@@ -6,643 +6,645 @@
                 <t t-call="web.internal_layout">
 
                     <style>
-                        /* ── Paleta y tipografía ── */
-                        :root {
-                            --azul:      #0d3b6e;
-                            --azul-med:  #1565c0;
-                            --azul-cla:  #e8f0fe;
-                            --acento:    #00897b;
-                            --gris-osc:  #263238;
-                            --gris-med:  #546e7a;
-                            --gris-cla:  #f4f6f9;
-                            --borde:     #cfd8dc;
-                            --blanco:    #ffffff;
-                        }
+                        /* ═══════════════════════════════════════════
+                           CSS COMPATIBLE CON wkhtmltopdf
+                           SIN: CSS variables, grid, flexbox, object-fit
+                           CON: tablas HTML, colores hex directos, inline styles
+                        ═══════════════════════════════════════════ */
 
                         body, .page {
-                            font-family: 'DejaVu Sans', Arial, sans-serif;
+                            font-family: Arial, sans-serif;
                             font-size: 12px;
-                            color: var(--gris-osc);
-                            background: var(--blanco);
+                            color: #263238;
+                            background: #ffffff;
                         }
 
-                        /* ── Encabezado del expediente ── */
-                        .exp-header {
-                            display: flex;
-                            align-items: stretch;
-                            border: 2px solid var(--azul);
-                            border-radius: 6px;
-                            overflow: hidden;
-                            margin-bottom: 20px;
-                        }
-                        .exp-header-brand {
-                            background: var(--azul);
-                            color: var(--blanco);
-                            width: 8px;
-                            flex-shrink: 0;
-                        }
-                        .exp-header-body {
-                            flex: 1;
-                            padding: 14px 18px;
-                        }
-                        .exp-header-title {
-                            font-size: 16px;
-                            font-weight: 700;
-                            text-transform: uppercase;
-                            letter-spacing: 1.5px;
-                            color: var(--azul);
-                            margin: 0 0 4px 0;
-                        }
-                        .exp-header-sub {
-                            font-size: 11px;
-                            color: var(--gris-med);
-                            margin: 0;
-                        }
-                        .exp-header-meta {
-                            display: flex;
-                            gap: 28px;
-                            margin-top: 10px;
-                            font-size: 11px;
-                        }
-                        .exp-meta-item strong {
-                            display: block;
-                            font-size: 9px;
-                            text-transform: uppercase;
-                            letter-spacing: 0.8px;
-                            color: var(--gris-med);
-                            margin-bottom: 1px;
-                        }
-                        .exp-badge {
-                            display: inline-block;
-                            padding: 3px 10px;
-                            border-radius: 20px;
-                            font-size: 10px;
-                            font-weight: 700;
-                            text-transform: uppercase;
-                            letter-spacing: 0.5px;
-                            background: var(--azul-cla);
-                            color: var(--azul-med);
-                            border: 1px solid var(--azul-med);
+                        #wkhtmltopdf_or_wkprice_header {
+                            display: none !important;
                         }
 
-                        /* ── Secciones ── */
-                        .seccion {
+                        /* ── Encabezado ── */
+                        .enc-tabla {
+                            width: 100%;
+                            border-collapse: collapse;
+                            border: 2px solid #0d3b6e;
                             margin-bottom: 18px;
                         }
-                        .seccion-titulo {
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                            margin-bottom: 10px;
-                            padding-bottom: 5px;
-                            border-bottom: 2px solid var(--azul-med);
+                        .enc-franja {
+                            width: 8px;
+                            background-color: #0d3b6e;
                         }
-                        .seccion-num {
-                            background: var(--azul-med);
-                            color: var(--blanco);
-                            font-size: 10px;
-                            font-weight: 700;
-                            width: 22px;
-                            height: 22px;
-                            border-radius: 50%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            flex-shrink: 0;
+                        .enc-cuerpo {
+                            padding: 12px 16px;
                         }
-                        .seccion-titulo h4 {
-                            margin: 0;
-                            font-size: 12px;
-                            font-weight: 700;
+                        .enc-titulo {
+                            font-size: 15px;
+                            font-weight: bold;
                             text-transform: uppercase;
-                            letter-spacing: 0.8px;
-                            color: var(--azul);
+                            letter-spacing: 1px;
+                            color: #0d3b6e;
+                            margin: 0 0 3px 0;
+                        }
+                        .enc-sub {
+                            font-size: 11px;
+                            color: #546e7a;
+                            margin: 0 0 8px 0;
+                        }
+                        .enc-meta-tabla {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .enc-meta-tabla td {
+                            padding: 2px 12px 2px 0;
+                            vertical-align: top;
+                        }
+                        .meta-lbl {
+                            display: block;
+                            font-size: 8px;
+                            text-transform: uppercase;
+                            letter-spacing: 0.7px;
+                            color: #546e7a;
+                            margin-bottom: 1px;
+                        }
+                        .meta-val {
+                            font-size: 11px;
+                            font-weight: bold;
+                            color: #263238;
+                        }
+                        .badge {
+                            display: inline-block;
+                            padding: 2px 8px;
+                            border: 1px solid #1565c0;
+                            font-size: 9px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            color: #1565c0;
+                            background-color: #e8f0fe;
                         }
 
-                        /* ── Tablas ── */
+                        /* ── Sección titulo ── */
+                        .sec-tabla {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 8px;
+                            border-bottom: 2px solid #1565c0;
+                        }
+                        .sec-num {
+                            width: 24px;
+                            background-color: #1565c0;
+                            color: #ffffff;
+                            font-size: 10px;
+                            font-weight: bold;
+                            text-align: center;
+                            padding: 3px;
+                        }
+                        .sec-titulo {
+                            padding: 4px 8px;
+                            font-size: 11px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 0.7px;
+                            color: #0d3b6e;
+                        }
+
+                        /* ── Tablas de datos ── */
                         .tabla-datos {
                             width: 100%;
                             border-collapse: collapse;
                             font-size: 11px;
-                        }
-                        .tabla-datos th {
-                            background: var(--azul);
-                            color: var(--blanco);
-                            padding: 6px 10px;
-                            font-weight: 600;
-                            text-align: center;
-                            font-size: 10px;
-                            text-transform: uppercase;
-                            letter-spacing: 0.5px;
-                        }
-                        .tabla-datos td {
-                            padding: 6px 10px;
-                            border-bottom: 1px solid var(--borde);
-                            text-align: center;
-                        }
-                        .tabla-datos tbody tr:nth-child(even) td {
-                            background: var(--gris-cla);
-                        }
-                        .tabla-datos .subtitulo-grupo th {
-                            background: var(--azul-med);
-                            font-size: 10px;
-                        }
-
-                        /* ── Grid de datos clave ── */
-                        .grid-info {
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 8px;
                             margin-bottom: 10px;
                         }
-                        .info-bloque {
-                            background: var(--gris-cla);
-                            border-left: 3px solid var(--azul-med);
-                            padding: 8px 12px;
-                            border-radius: 0 4px 4px 0;
-                        }
-                        .info-bloque label {
-                            display: block;
-                            font-size: 9px;
+                        .tabla-datos th {
+                            background-color: #0d3b6e;
+                            color: #ffffff;
+                            padding: 6px 8px;
+                            text-align: center;
+                            font-size: 10px;
                             text-transform: uppercase;
-                            letter-spacing: 0.7px;
-                            color: var(--gris-med);
+                        }
+                        .tabla-datos th.sub {
+                            background-color: #1565c0;
+                        }
+                        .tabla-datos td {
+                            padding: 5px 8px;
+                            border-bottom: 1px solid #cfd8dc;
+                            text-align: center;
+                        }
+                        .tabla-datos tr.par td {
+                            background-color: #f4f6f9;
+                        }
+
+                        /* ── Bloques de info ── */
+                        .info-tabla {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 10px;
+                        }
+                        .info-tabla td {
+                            width: 50%;
+                            padding: 4px;
+                            vertical-align: top;
+                        }
+                        .info-bloque {
+                            background-color: #f4f6f9;
+                            border-left: 3px solid #1565c0;
+                            padding: 7px 10px;
+                        }
+                        .info-lbl {
+                            display: block;
+                            font-size: 8px;
+                            text-transform: uppercase;
+                            letter-spacing: 0.6px;
+                            color: #546e7a;
                             margin-bottom: 2px;
                         }
-                        .info-bloque span {
-                            font-size: 12px;
-                            font-weight: 600;
-                            color: var(--gris-osc);
+                        .info-val {
+                            font-size: 11px;
+                            font-weight: bold;
+                            color: #263238;
                         }
 
-                        /* ── Foto integrada ── */
-                        .foto-contenedor {
-                            margin-top: 12px;
-                            border: 1px solid var(--borde);
-                            border-radius: 6px;
-                            overflow: hidden;
+                        /* ── Foto / Mapa contenedor ── */
+                        .foto-caja {
+                            border: 1px solid #cfd8dc;
+                            margin-top: 10px;
+                            margin-bottom: 10px;
                         }
-                        .foto-header {
-                            background: var(--gris-cla);
-                            border-bottom: 1px solid var(--borde);
-                            padding: 5px 12px;
-                            font-size: 10px;
-                            font-weight: 700;
+                        .foto-hdr {
+                            background-color: #f4f6f9;
+                            border-bottom: 1px solid #cfd8dc;
+                            padding: 4px 10px;
+                            font-size: 9px;
+                            font-weight: bold;
                             text-transform: uppercase;
-                            letter-spacing: 0.7px;
-                            color: var(--gris-med);
+                            letter-spacing: 0.6px;
+                            color: #546e7a;
                         }
-                        .foto-cuerpo {
-                            padding: 10px;
+                        .foto-hdr-mapa {
+                            background-color: #e8f0fe;
+                            border-bottom: 1px solid #1565c0;
+                            padding: 4px 10px;
+                            font-size: 9px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 0.6px;
+                            color: #1565c0;
+                        }
+                        .foto-body {
+                            padding: 8px;
                             text-align: center;
-                        }
-                        .foto-cuerpo img {
-                            max-width: 100%;
-                            max-height: 280px;
-                            object-fit: contain;
-                            border-radius: 4px;
                         }
                         .foto-placeholder {
-                            padding: 18px;
-                            border: 1px dashed var(--borde);
-                            border-radius: 4px;
-                            color: var(--gris-med);
-                            font-size: 11px;
+                            padding: 14px;
+                            border: 1px dashed #cfd8dc;
+                            color: #90a4ae;
+                            font-size: 10px;
                             font-style: italic;
+                            text-align: center;
                         }
 
-                        /* ── Mapa ── */
-                        .mapa-contenedor {
-                            border: 1px solid var(--azul-med);
-                            border-radius: 6px;
-                            overflow: hidden;
-                            margin-top: 12px;
+                        /* ── Limitantes y Criterios (tabla 2 columnas) ── */
+                        .dos-col {
+                            width: 100%;
+                            border-collapse: collapse;
                         }
-                        .mapa-header {
-                            background: var(--azul-cla);
-                            border-bottom: 1px solid var(--azul-med);
-                            padding: 5px 12px;
-                            font-size: 10px;
-                            font-weight: 700;
+                        .dos-col td {
+                            width: 50%;
+                            padding: 3px 4px;
+                            vertical-align: top;
+                        }
+                        .item-fila {
+                            border: 1px solid #cfd8dc;
+                            padding: 6px 10px;
+                            font-size: 11px;
+                        }
+                        .item-val {
+                            font-weight: bold;
+                            color: #00897b;
+                            float: right;
+                        }
+                        .criterio-val {
+                            font-weight: bold;
+                            color: #1565c0;
+                            float: right;
+                        }
+
+                        /* ── Dictamen ── */
+                        .dictamen {
+                            background-color: #e8f0fe;
+                            border-left: 4px solid #0d3b6e;
+                            padding: 10px 14px;
+                            margin-top: 14px;
+                            font-size: 11px;
+                        }
+                        .dict-lbl {
+                            display: block;
+                            font-size: 8px;
                             text-transform: uppercase;
                             letter-spacing: 0.7px;
-                            color: var(--azul-med);
-                        }
-                        .mapa-cuerpo {
-                            padding: 10px;
-                            text-align: center;
-                        }
-                        .mapa-cuerpo img {
-                            max-width: 100%;
-                            border-radius: 4px;
-                        }
-                        .mapa-credito {
-                            font-size: 8px;
-                            color: var(--gris-med);
-                            margin-top: 5px;
-                        }
-
-                        /* ── Criterios ── */
-                        .criterios-grid {
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 6px;
-                        }
-                        .criterio-fila {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            background: var(--gris-cla);
-                            border-radius: 4px;
-                            padding: 6px 10px;
-                            font-size: 11px;
-                        }
-                        .criterio-fila .val {
-                            font-weight: 700;
-                            color: var(--azul-med);
-                        }
-
-                        /* ── Aspectos limitantes ── */
-                        .limitantes-grid {
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 6px;
-                        }
-                        .limitante-item {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            border: 1px solid var(--borde);
-                            border-radius: 4px;
-                            padding: 6px 10px;
-                            font-size: 11px;
-                        }
-                        .limitante-item .prio {
-                            font-weight: 700;
-                            color: var(--acento);
-                        }
-
-                        /* ── Dictamen final ── */
-                        .dictamen {
-                            background: var(--azul-cla);
-                            border-left: 4px solid var(--azul);
-                            border-radius: 0 6px 6px 0;
-                            padding: 12px 16px;
-                            margin-top: 16px;
-                            font-size: 11px;
-                        }
-                        .dictamen label {
-                            display: block;
-                            font-size: 9px;
-                            text-transform: uppercase;
-                            letter-spacing: 0.8px;
-                            color: var(--gris-med);
-                            margin-bottom: 3px;
+                            color: #546e7a;
                             margin-top: 8px;
+                            margin-bottom: 2px;
                         }
-                        .dictamen label:first-child { margin-top: 0; }
-                        .dictamen p { margin: 0; font-weight: 600; color: var(--gris-osc); }
-
-                        /* ── Fotos de equipos ── */
-                        .equipos-fotos {
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 10px;
-                            margin-top: 12px;
+                        .dict-lbl:first-child { margin-top: 0; }
+                        .dict-val {
+                            margin: 0;
+                            font-weight: bold;
+                            color: #263238;
                         }
 
-                        /* ── Croquis final ── */
-                        .croquis-contenedor {
-                            margin-top: 12px;
+                        /* ── Fotos de equipos (tabla 2 col) ── */
+                        .equipos-tabla {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .equipos-tabla td {
+                            width: 50%;
+                            padding: 4px;
                             text-align: center;
-                        }
-                        .croquis-contenedor img {
-                            max-width: 100%;
-                            max-height: 400px;
-                            object-fit: contain;
-                            border: 1px solid var(--borde);
-                            border-radius: 6px;
+                            vertical-align: top;
                         }
                     </style>
 
-                    <div class="page">
+                    <div class="page" style="margin-top: 0px !important; padding-top: 0px !important;">
 
                         <!-- ══════════════════════════════════════════
-                             ENCABEZADO DEL EXPEDIENTE
+                             ENCABEZADO
                         ══════════════════════════════════════════ -->
-                        <div class="exp-header">
-                            <div class="exp-header-brand"/>
-                            <div class="exp-header-body">
-                                <p class="exp-header-title">Expediente de Encuesta Técnica</p>
-                                <p class="exp-header-sub">
-                                    Sistema Propuesto: <span t-field="doc.sistema_recomendado"/>
-                                </p>
-                                <div class="exp-header-meta">
-                                    <div class="exp-meta-item">
-                                        <strong>Cliente</strong>
-                                        <span t-field="doc.cliente"/>
-                                    </div>
-                                    <div class="exp-meta-item">
-                                        <strong>C.I.</strong>
-                                        <span t-field="doc.ci"/>
-                                    </div>
-                                    <div class="exp-meta-item">
-                                        <strong>Fecha de Encuesta</strong>
-                                        <span t-field="doc.fecha_enc"/>
-                                    </div>
-                                    <div class="exp-meta-item">
-                                        <strong>Estado de Evaluación</strong>
-                                        <span class="exp-badge" t-field="doc.estado_evaluacion"/>
-                                    </div>
-                                </div>
+                        <table class="enc-tabla">
+                            <tr>
+                                <td class="enc-franja"> </td>
+                                <td class="enc-cuerpo">
+                                    <p class="enc-titulo">Expediente de Encuesta Técnica</p>
+                                    <p class="enc-sub">
+                                        Sistema Propuesto: <span t-field="doc.sistema_recomendado"/>
+                                    </p>
+                                    <table class="enc-meta-tabla">
+                                        <tr>
+                                            <td>
+                                                <span class="meta-lbl">Cliente</span>
+                                                <span class="meta-val" t-field="doc.cliente"/>
+                                            </td>
+                                            <td>
+                                                <span class="meta-lbl">C.I.</span>
+                                                <span class="meta-val" t-field="doc.ci"/>
+                                            </td>
+                                            <td>
+                                                <span class="meta-lbl">Fecha de Encuesta</span>
+                                                <span class="meta-val" t-field="doc.fecha_enc"/>
+                                            </td>
+                                            <td>
+                                                <span class="meta-lbl">Estado</span>
+                                                <span class="badge" t-field="doc.estado_evaluacion"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECCIÓN 1 — UBICACIÓN
+                        ══════════════════════════════════════════ -->
+                        <table class="sec-tabla">
+                            <tr>
+                                <td class="sec-num">1</td>
+                                <td class="sec-titulo">Ubicación de la Vivienda</td>
+                            </tr>
+                        </table>
+
+                        <table class="tabla-datos">
+                            <thead>
+                                <tr>
+                                    <th>Municipio</th>
+                                    <th>Consejo Popular</th>
+                                    <th>Comunidad</th>
+                                    <th>Latitud</th>
+                                    <th>Longitud</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span t-field="doc.municipio_id.name"/></td>
+                                    <td><span t-field="doc.consejo_popular_id.name"/></td>
+                                    <td><span t-field="doc.comunidad_id.name"/></td>
+                                    <td><span t-field="doc.latitud"/></td>
+                                    <td><span t-field="doc.longitud"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Foto vivienda -->
+                        <div class="foto-caja">
+                            <div class="foto-hdr">Fotografia de la Vivienda</div>
+                            <div class="foto-body">
+                                <t t-if="doc.foto_vivienda_ids">
+                                    <t t-set="fv" t-value="doc.foto_vivienda_ids[0]"/>
+                                    <img t-att-src="'/web/image/%s' % fv.id"
+                                         style="max-width:100%; max-height:200px; width:auto; height:auto;"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="foto-placeholder">No se adjunto fotografia de la vivienda.</div>
+                                </t>
                             </div>
                         </div>
 
-                        <!-- ══════════════════════════════════════════
-                             SECCIÓN 1 — UBICACIÓN DE LA VIVIENDA
-                        ══════════════════════════════════════════ -->
-                        <div class="seccion">
-                            <div class="seccion-titulo">
-                                <div class="seccion-num">1</div>
-                                <h4>Ubicación de la Vivienda</h4>
-                            </div>
-
-                            <table class="tabla-datos">
-                                <thead>
-                                    <tr>
-                                        <th>Municipio</th>
-                                        <th>Consejo Popular</th>
-                                        <th>Comunidad</th>
-                                        <th>Latitud</th>
-                                        <th>Longitud</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><span t-field="doc.municipio_id.name"/></td>
-                                        <td><span t-field="doc.consejo_popular_id.name"/></td>
-                                        <td><span t-field="doc.comunidad_id.name"/></td>
-                                        <td><span t-field="doc.latitud"/></td>
-                                        <td><span t-field="doc.longitud"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Foto de la Vivienda -->
-                            <div class="foto-contenedor">
-                                <div class="foto-header">📷 Fotografía de la Vivienda</div>
-                                <div class="foto-cuerpo">
-                                    <t t-if="doc.foto_vivienda">
-                                        <img t-att-src="image_data_uri(doc.foto_vivienda)"
-                                             alt="Fotografía de la vivienda"/>
-                                    </t>
-                                    <t t-else="">
-                                        <div class="foto-placeholder">
-                                            No se adjuntó fotografía de la vivienda.
-                                        </div>
-                                    </t>
-                                </div>
-                            </div>
-
-                            <!-- Mapa de ubicación -->
-                            <div class="mapa-contenedor">
-                                <div class="mapa-header">🗺 Mapa de Ubicación</div>
-                                <div class="mapa-cuerpo">
-                                    <t t-if="doc.mapa_imagen">
-                                        <img t-att-src="image_data_uri(doc.mapa_imagen)"
-                                             alt="Mapa de ubicación"/>
-                                        <p class="mapa-credito">
-                                            Maps by <a href="https://locationiq.com">LocationIQ.com</a>
-                                        </p>
-                                    </t>
-                                    <t t-else="">
-                                        <div class="foto-placeholder">
-                                            El mapa se generará automáticamente al guardar el formulario.
-                                        </div>
-                                    </t>
-                                </div>
+                        <!-- Mapa -->
+                        <div class="foto-caja" style="border-color: #1565c0;">
+                            <div class="foto-hdr-mapa">Mapa de Ubicacion</div>
+                            <div class="foto-body">
+                                <t t-if="doc.mapa_imagen">
+                                    <img t-att-src="image_data_uri(doc.mapa_imagen)"
+                                         style="max-width:100%; max-height:200px; width:auto; height:auto;"/>
+                                    <p style="font-size:8px; color:#546e7a; margin:4px 0 0 0;">
+                                        Maps by LocationIQ.com
+                                    </p>
+                                </t>
+                                <t t-else="">
+                                    <div class="foto-placeholder">El mapa se generara automaticamente al guardar.</div>
+                                </t>
                             </div>
                         </div>
 
                         <!-- ══════════════════════════════════════════
                              SECCIÓN 2 — CARACTERÍSTICAS DE LA VIVIENDA
                         ══════════════════════════════════════════ -->
-                        <div class="seccion">
-                            <div class="seccion-titulo">
-                                <div class="seccion-num">2</div>
-                                <h4>Características de la Vivienda</h4>
-                            </div>
+                        <table class="sec-tabla">
+                            <tr>
+                                <td class="sec-num">2</td>
+                                <td class="sec-titulo">Caracteristicas de la Vivienda</td>
+                            </tr>
+                        </table>
 
-                            <div class="grid-info">
-                                <div class="info-bloque">
-                                    <label>Tipo de Vivienda</label>
-                                    <span t-field="doc.tipo_vivienda"/>
-                                </div>
-                                <div class="info-bloque">
-                                    <label>Condición General</label>
-                                    <span t-field="doc.condicion_vivienda"/>
-                                </div>
-                                <div class="info-bloque">
-                                    <label>Materiales</label>
-                                    <span>
-                                        <t t-if="doc.material_madera">Madera </t>
-                                        <t t-if="doc.material_mamposteria">Mampostería </t>
-                                        <t t-if="doc.material_otro"><span t-field="doc.otro_material"/></t>
-                                    </span>
-                                </div>
-                                <div class="info-bloque">
-                                    <label>Divisiones Internas</label>
-                                    <span>
-                                        <t t-if="doc.divisiones">
-                                            <t t-if="doc.sala">Sala </t>
-                                            <t t-if="doc.comedor">Comedor </t>
-                                            <t t-if="doc.cocina">Cocina </t>
-                                            <t t-if="doc.cuartos">Cuartos </t>
-                                            <t t-if="doc.banos">Baños</t>
-                                        </t>
-                                        <t t-else="">No posee</t>
-                                    </span>
-                                </div>
-                                <t t-if="doc.tipo_vivienda == 'finca'">
+                        <table class="info-tabla">
+                            <tr>
+                                <td>
                                     <div class="info-bloque">
-                                        <label>Tipo de Actividad (Finca)</label>
-                                        <span t-field="doc.tipo_finca"/>
+                                        <span class="info-lbl">Tipo de Vivienda</span>
+                                        <span class="info-val" t-field="doc.tipo_vivienda"/>
                                     </div>
-                                </t>
-                            </div>
-                        </div>
+                                </td>
+                                <td>
+                                    <div class="info-bloque">
+                                        <span class="info-lbl">Condicion General</span>
+                                        <span class="info-val" t-field="doc.condicion_vivienda"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="info-bloque">
+                                        <span class="info-lbl">Materiales</span>
+                                        <span class="info-val">
+                                            <t t-if="doc.material_madera">Madera </t>
+                                            <t t-if="doc.material_mamposteria">Mamposteria </t>
+                                            <t t-if="doc.material_otro"><span t-field="doc.otro_material"/></t>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="info-bloque">
+                                        <span class="info-lbl">Divisiones Internas</span>
+                                        <span class="info-val">
+                                            <t t-if="doc.divisiones">
+                                                <t t-if="doc.sala">Sala </t>
+                                                <t t-if="doc.comedor">Comedor </t>
+                                                <t t-if="doc.cocina">Cocina </t>
+                                                <t t-if="doc.cuartos">Cuartos </t>
+                                                <t t-if="doc.banos">Banos</t>
+                                            </t>
+                                            <t t-else="">No posee</t>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <t t-if="doc.tipo_vivienda == 'finca'">
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="info-bloque">
+                                            <span class="info-lbl">Tipo de Actividad (Finca)</span>
+                                            <span class="info-val" t-field="doc.tipo_finca"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
 
                         <!-- Salto de página -->
                         <p style="page-break-before: always;"> </p>
 
                         <!-- ══════════════════════════════════════════
-                             SECCIÓN 3 — SERVICIO ELÉCTRICO Y NÚCLEO FAMILIAR
+                             SECCIÓN 3 — NÚCLEO FAMILIAR
                         ══════════════════════════════════════════ -->
-                        <div class="seccion">
-                            <div class="seccion-titulo">
-                                <div class="seccion-num">3</div>
-                                <h4>Servicio Eléctrico y Núcleo Familiar</h4>
-                            </div>
+                        <table class="sec-tabla">
+                            <tr>
+                                <td class="sec-num">3</td>
+                                <td class="sec-titulo">Servicio Electrico y Nucleo Familiar</td>
+                            </tr>
+                        </table>
 
-                            <div class="info-bloque" style="margin-bottom: 10px;">
-                                <label>Tipo de Servicio Energético Actual</label>
-                                <span t-field="doc.tipo_servicio_energetico"/>
-                            </div>
+                        <div class="info-bloque" style="margin-bottom:10px;">
+                            <span class="info-lbl">Tipo de Servicio Energetico Actual</span>
+                            <span class="info-val" t-field="doc.tipo_servicio_energetico"/>
+                        </div>
 
-                            <table class="tabla-datos">
-                                <thead>
+                        <table class="tabla-datos">
+                            <thead>
+                                <tr>
+                                    <th colspan="4">
+                                        Miembros del Hogar — Total:
+                                        <span t-field="doc.total_personas"/> personas
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="sub">Parentesco / Grupo</th>
+                                    <th class="sub">Sexo</th>
+                                    <th class="sub">Edad</th>
+                                    <th class="sub">Escolaridad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.nucleo_familiar_ids" t-as="fam">
+                                    <tr t-att-class="'par' if fam_index % 2 == 1 else ''">
+                                        <td><span t-field="fam.grupo_nucleo"/></td>
+                                        <td><span t-field="fam.sexo_nucleo"/></td>
+                                        <td><span t-field="fam.edad_nucleo"/></td>
+                                        <td><span t-field="fam.escolaridad"/></td>
+                                    </tr>
+                                </t>
+                                <t t-if="not doc.nucleo_familiar_ids">
                                     <tr>
-                                        <th colspan="4">
-                                            Miembros del Hogar — Total:
-                                            <span t-field="doc.total_personas"/> personas
-                                        </th>
+                                        <td colspan="4" style="color:#90a4ae; font-style:italic;">
+                                            No se registraron miembros del nucleo familiar.
+                                        </td>
                                     </tr>
-                                    <tr class="subtitulo-grupo">
-                                        <th>Parentesco / Grupo</th>
-                                        <th>Sexo</th>
-                                        <th>Edad</th>
-                                        <th>Escolaridad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="doc.nucleo_familiar_ids" t-as="fam">
-                                        <tr>
-                                            <td><span t-field="fam.grupo_nucleo"/></td>
-                                            <td><span t-field="fam.sexo_nucleo"/></td>
-                                            <td><span t-field="fam.edad_nucleo"/></td>
-                                            <td><span t-field="fam.escolaridad"/></td>
-                                        </tr>
-                                    </t>
-                                    <t t-if="not doc.nucleo_familiar_ids">
-                                        <tr>
-                                            <td colspan="4" style="color: #9e9e9e; font-style: italic;">
-                                                No se registraron miembros del núcleo familiar.
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                            </table>
+                                </t>
+                            </tbody>
+                        </table>
 
-                            <!-- Fotos de Equipos -->
-                            <div class="foto-contenedor" style="margin-top: 14px;">
-                                <div class="foto-header">📷 Fotografías de los Equipos del Hogar</div>
-                                <div class="foto-cuerpo">
-                                    <t t-if="doc.foto_equipo_1 or doc.foto_equipo_2">
-                                        <div class="equipos-fotos">
-                                            <t t-if="doc.foto_equipo_1">
-                                                <img t-att-src="image_data_uri(doc.foto_equipo_1)"
-                                                     alt="Equipo 1"
-                                                     style="width:100%; border-radius:4px; border:1px solid #cfd8dc;"/>
+                        <!-- Fotos de equipos -->
+                        <div class="foto-caja">
+                            <div class="foto-hdr">Fotografias de los Equipos del Hogar</div>
+                            <div class="foto-body">
+                                <t t-if="doc.foto_equipo_ids">
+                                    <table class="equipos-tabla">
+                                        <t t-foreach="doc.foto_equipo_ids" t-as="eq">
+                                            <t t-if="eq_index % 2 == 0">
+                                                <tr>
+                                                    <!-- Foto Izquierda (siempre existe) -->
+                                                    <td>
+                                                    <img t-att-src="'/web/image/%s' % eq.id"
+                                                        style="max-width:100%; max-height:200px; width:auto; height:auto; border:1px solid #cfd8dc;"/>
+                                                    </td>
+                                                    <!-- Foto derecha (puede no existir en la última fila impar) -->
+                                                    <t t-if="eq_index + 1 &lt; len(doc.foto_equipo_ids)">
+                                                        <t t-set="eq2" t-value="doc.foto_equipo_ids[eq_index + 1]"/>
+                                                            <td style="width:50%; padding:4px; text-align:center; vertical-align:top;">
+                                                                <img t-att-src="'/web/image/%s' % eq2.id"
+                                                                style="max-width:100%; max-height:200px; width:auto; height:auto; border:1px solid #cfd8dc;"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <!-- Celda Vacia para mantener el Layout cuando hay un numero impar de fotos -->
+                                                         <td style="width:50%;"> </td>
+                                                    </t>
+                                                </tr>
                                             </t>
-                                            <t t-if="doc.foto_equipo_2">
-                                                <img t-att-src="image_data_uri(doc.foto_equipo_2)"
-                                                     alt="Equipo 2"
-                                                     style="width:100%; border-radius:4px; border:1px solid #cfd8dc;"/>
-                                            </t>
-                                        </div>
-                                    </t>
-                                    <t t-else="">
-                                        <div class="foto-placeholder">
-                                            No se adjuntaron fotografías de equipos.
-                                        </div>
-                                    </t>
-                                </div>
+                                        </t>
+                                    </table>
+                                </t>
+                                <t t-else="">
+                                    <div class="foto-placeholder">No se adjuntaron fotografias de equipos.</div>
+                                </t>
                             </div>
                         </div>
 
                         <!-- ══════════════════════════════════════════
                              SECCIÓN 4 — ASPECTOS LIMITANTES
                         ══════════════════════════════════════════ -->
-                        <div class="seccion">
-                            <div class="seccion-titulo">
-                                <div class="seccion-num">4</div>
-                                <h4>Aspectos Limitantes (Prioridad)</h4>
-                            </div>
-                            <div class="limitantes-grid">
-                                <div class="limitante-item">
-                                    <span>Energía Eléctrica</span>
-                                    <span class="prio" t-field="doc.limit_energia"/>
-                                </div>
-                                <div class="limitante-item">
-                                    <span>Seguridad</span>
-                                    <span class="prio" t-field="doc.limit_seguridad"/>
-                                </div>
-                                <div class="limitante-item">
-                                    <span>Meteorología</span>
-                                    <span class="prio" t-field="doc.limit_meteorologia"/>
-                                </div>
-                                <div class="limitante-item">
-                                    <span>Falta de Mano de Obra</span>
-                                    <span class="prio" t-field="doc.limit_mano_obra"/>
-                                </div>
-                            </div>
-                        </div>
+                        <table class="sec-tabla">
+                            <tr>
+                                <td class="sec-num">4</td>
+                                <td class="sec-titulo">Aspectos Limitantes (Prioridad)</td>
+                            </tr>
+                        </table>
+
+                        <table class="dos-col">
+                            <tr>
+                                <td>
+                                    <div class="item-fila">
+                                        Energia Electrica
+                                        <span class="item-val" t-field="doc.limit_energia"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item-fila">
+                                        Seguridad
+                                        <span class="item-val" t-field="doc.limit_seguridad"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="item-fila">
+                                        Meteorologia
+                                        <span class="item-val" t-field="doc.limit_meteorologia"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item-fila">
+                                        Falta de Mano de Obra
+                                        <span class="item-val" t-field="doc.limit_mano_obra"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
                         <!-- ══════════════════════════════════════════
                              SECCIÓN 5 — CRITERIOS DE SELECCIÓN
                         ══════════════════════════════════════════ -->
-                        <div class="seccion">
-                            <div class="seccion-titulo">
-                                <div class="seccion-num">5</div>
-                                <h4>Criterios de Selección</h4>
-                            </div>
-                            <div class="criterios-grid">
-                                <div class="criterio-fila">
-                                    <span>Condición socioeconómica de la mujer</span>
-                                    <span class="val" t-field="doc.criterio_mujer"/>
-                                </div>
-                                <div class="criterio-fila">
-                                    <span>Número de beneficiarios</span>
-                                    <span class="val" t-field="doc.criterio_beneficiario"/>
-                                </div>
-                                <div class="criterio-fila">
-                                    <span>Condiciones de seguridad</span>
-                                    <span class="val" t-field="doc.criterio_seguridad"/>
-                                </div>
-                                <div class="criterio-fila">
-                                    <span>Disponibilidad de equipos</span>
-                                    <span class="val" t-field="doc.criterio_disponibilidad"/>
-                                </div>
-                                <div class="criterio-fila">
-                                    <span>Uso productivo de la energía</span>
-                                    <span class="val" t-field="doc.criterio_uso_productivo"/>
-                                </div>
-                            </div>
-                        </div>
+                        <table class="sec-tabla">
+                            <tr>
+                                <td class="sec-num">5</td>
+                                <td class="sec-titulo">Criterios de Seleccion</td>
+                            </tr>
+                        </table>
+
+                        <table class="dos-col">
+                            <tr>
+                                <td>
+                                    <div class="item-fila">
+                                        Condicion socioeconomica de la mujer
+                                        <span class="criterio-val" t-field="doc.criterio_mujer"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item-fila">
+                                        Numero de beneficiarios
+                                        <span class="criterio-val" t-field="doc.criterio_beneficiario"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="item-fila">
+                                        Condiciones de seguridad
+                                        <span class="criterio-val" t-field="doc.criterio_seguridad"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item-fila">
+                                        Disponibilidad de equipos
+                                        <span class="criterio-val" t-field="doc.criterio_disponibilidad"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="item-fila">
+                                        Uso productivo de la energia
+                                        <span class="criterio-val" t-field="doc.criterio_uso_productivo"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
                         <!-- ══════════════════════════════════════════
                              DICTAMEN FINAL
                         ══════════════════════════════════════════ -->
                         <div class="dictamen">
-                            <label>Dictamen del Sistema</label>
-                            <p t-field="doc.observacion_automatica"/>
-                            <label>Aprovechamiento Propuesto</label>
-                            <p t-field="doc.aprovechamiento_energia"/>
+                            <span class="dict-lbl">Dictamen del Sistema</span>
+                            <p class="dict-val" t-field="doc.observacion_automatica"/>
+                            <span class="dict-lbl">Aprovechamiento Propuesto</span>
+                            <p class="dict-val" t-field="doc.aprovechamiento_energia"/>
                             <t t-if="doc.emprende_negocio == 'si'">
-                                <label>Negocio a Emprender</label>
-                                <p t-field="doc.negocio_descripcion"/>
+                                <span class="dict-lbl">Negocio a Emprender</span>
+                                <p class="dict-val" t-field="doc.negocio_descripcion"/>
                             </t>
                         </div>
 
                         <!-- ══════════════════════════════════════════
-                             CROQUIS DE LA VIVIENDA  (al final)
+                             CROQUIS (página final)
                         ══════════════════════════════════════════ -->
                         <p style="page-break-before: always;"> </p>
 
-                        <div class="seccion">
-                            <div class="seccion-titulo">
-                                <div class="seccion-num">✎</div>
-                                <h4>Croquis de la Vivienda</h4>
-                            </div>
-                            <div class="croquis-contenedor">
-                                <t t-if="doc.foto_croquis">
-                                    <img t-att-src="image_data_uri(doc.foto_croquis)"
-                                         alt="Croquis de la vivienda"/>
+                        <table class="sec-tabla">
+                            <tr>
+                                <td class="sec-num" style="font-size:12px;">&#9998;</td>
+                                <td class="sec-titulo">Croquis de la Vivienda</td>
+                            </tr>
+                        </table>
+
+                        <div class="foto-caja">
+                            <div class="foto-hdr">Croquis</div>
+                            <div class="foto-body">
+                                <t t-if="doc.foto_croquis_ids">
+                                    <t t-set="cq" t-value="doc.foto_croquis_ids[0]"/>
+                                    <img t-att-src="'/web/image/%s' % cq.id"
+                                         style="max-width:150%; max-height:350px; width:auto; height:auto;"/>
                                 </t>
                                 <t t-else="">
-                                    <div class="foto-placeholder">
-                                        No se adjuntó croquis de la vivienda.
-                                    </div>
+                                    <div class="foto-placeholder">No se adjunto croquis de la vivienda.</div>
                                 </t>
                             </div>
                         </div>

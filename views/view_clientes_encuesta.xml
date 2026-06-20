@@ -73,9 +73,24 @@
                         <page string="🚜Actividad Productiva" name="tab_actividad"/>
                         <page string="⚠️Aspectos Limitantes" name="tab_aspectos"/>
                         <page string="🎯Criterios de Selección" name="tab_criterios"/>
-                        <page string="📷 Fotografías y Planos">
-                            <group>
-                                <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        <page string="📷 Fotografías y Planos" name="fotografias">
+                            <group string="📷 Fotografía de la Vivienda">
+                                <field name="foto_vivienda_ids"
+                                    widget="many2many_binary"
+                                    string="Adjunte aqui las Fotos de Vivienda 👉"
+                                    context="{'default_tipo_foto': 'vivienda'}"/>
+                            </group>
+                            <group string="📷 Fotografías de los Equipos">
+                                <field name="foto_equipo_ids"
+                                    widget="many2many_binary"
+                                    string="Adjunte aqui las Fotos de Equipos 👉"
+                                    context="{'default_tipo_foto': 'equipo'}"/>
+                            </group>
+                            <group string="✎ Croquis de la Vivienda">
+                                <field name="foto_croquis_ids"
+                                    widget="many2many_binary"
+                                    string="Adjunte aqui las fotos del Croquis 👉"
+                                    context="{'default_tipo_foto': 'croquis'}"/>
                             </group>
                         </page>
                     </notebook>

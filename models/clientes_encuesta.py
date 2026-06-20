@@ -157,10 +157,23 @@ class Clientes(models.Model):
     # ======================================
     # Campos para Attachment
     # ======================================
-    attachment_ids = fields.Many2many(
+    foto_vivienda_ids = fields.Many2many(
         'ir.attachment',
-        string='Fotos y Croquis'
-    )    
+        relation='encuesta_foto_vivienda_rel',
+        string='Vivienda'
+    )
+    
+    foto_equipo_ids = fields.Many2many(
+        'ir.attachment',
+        relation='encuesta_foto_equipo_rel',
+        string='Equipos'
+    )
+    
+    foto_croquis_ids = fields.Many2many(
+        'ir.attachment',
+        relation='encuesta_foto_croquis_rel',
+        string='Croquis'
+    )
     
     # ======================
     # APIS

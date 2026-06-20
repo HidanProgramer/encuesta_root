@@ -34,8 +34,8 @@
              'views/view_encuesta_criterios_inherit.xml',
              'views/view_dashboard.xml',
              'views/view_mapa_global.xml',
-             'report/report_encuesta_actions.xml',
-             'report/report_encuesta_templates.xml'],
+             'report/report_encuesta_templates.xml',
+             'report/report_encuesta_actions.xml'],
     'assets': {
         'web.assets_backend': [
             # Librería del Dashboard
