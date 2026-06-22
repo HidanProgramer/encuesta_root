@@ -99,7 +99,25 @@
                         <DashboardChart type="'pie'" data="evaluacionChartData" onChartClick.bind="onEvaluacionChartClick"/>
                     </div>
                 </div>
-
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0 bg-white" style="border-radius: 10px;">
+                        <div class="card-header bg-white border-0 pt-3 pb-0">
+                            <h5 class="card-title fw-bold text-dark mb-0">
+                                <i class="oi oi-graph-bar text-primary me-2"></i> 
+                                Cantidad de Clientes Encuestados por Meses
+                            </h5>
+                        </div>
+                        <div class="card-body" style="position: relative; height: 380px; width: 100%;">
+                            
+                            <DashboardChart 
+                                type="'bar'" 
+                                data="clientesMesesChartData"
+                                onChartClick="onClientesMesesChartClick.bind(this)"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </t>

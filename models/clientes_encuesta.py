@@ -1,6 +1,8 @@
 import base64
 import logging
 import requests
+from collections import OrderedDict
+import locale
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -400,6 +402,64 @@ class Clientes(models.Model):
             elif sys_type == 'rechazado':
                 eval_values[2] = count
                 
+        # Gráfico 5: CLIENTES POR MESES ----
+        # Buscamos todas las encuestas registradas
+        encuestas = self.search([])
+        
+        # Diccionario Temporal para acumular cantidades usando uan tupla (año, mes) como clave
+        conteo_cronologico = {}
+        
+        for encuesta in encuestas:
+            # Validar que fecha_enc tenga datos
+            if encuesta.fecha_enc:
+                anio = encuesta.fecha_enc.year
+                mes = encuesta.fecha_enc.month
+                
+                clave_temporal = (anio, mes)
+                conteo_cronologico[clave_temporal] = conteo_cronologico.get(clave_temporal, 0) + 1
+        
+        # Ordenamos las claves por año y mes
+        claves_ordenadas = sorted(conteo_cronologico.keys())
+        
+        # Mapeo manual abreviado
+        meses_nombres = {
+            1: 'ene.', 2: 'feb.', 3: 'mar.', 4: 'abr.', 5: 'may.', 6: 'jun.',
+            7: 'jul.', 8: 'ago.', 9: 'sep.', 10: 'oct.', 11: 'nov.', 12: 'dic.'
+        }
+        
+        labels_meses = []
+        values_meses = []
+        
+        # Construir las listas en orden cronologico
+        for clave in claves_ordenadas:
+            anio_corto = str(clave[0])[2:] # Extrae los dos ultimos digitos del año
+            nombre_mes = meses_nombres[clave[1]]
+            
+            # Generar la etiqueta del grafico con la forma 'mes.-añoCorto'
+            labels_meses.append(f"{nombre_mes}-{anio_corto}")
+            values_meses.append(conteo_cronologico[clave])
+        
+        # Para ordenar las claves cronológicamente
+        datos_grafico_meses = {
+            'labels': labels_meses,
+            'datasets': [{
+                'label': 'Clientes Encuestados',
+                'data': values_meses,
+                'backgroundColor': 'rgba(54, 162, 235, 0.7)', # Azul suave 
+                'borderColor': 'rgba(54, 162, 235, 1)',
+                'borderWidth': 2,
+                'type': 'bar' # Tipo barras combinadas
+            }, {
+                'label': 'Tendencia',
+                'data': values_meses,
+                'borderColor': '#2b78b7', # Línea de tendencia azul oscura
+                'borderWidth': 3,
+                'type': 'line', # Tipo línea
+                'fill': False,
+                'tension': 0.3 # Suavizado de curva
+            }]
+        }
+                
         return {
             'cards': {
                 'total_encuestas': total_encuestas,
@@ -416,7 +476,8 @@ class Clientes(models.Model):
                     'dataset_1kw': dataset_1kw_values,
                     'dataset_2kw': dataset_2kw_values,
                 },
-                'evaluacion': {'labels': eval_labels, 'values': eval_values}
+                'evaluacion': {'labels': eval_labels, 'values': eval_values},
+                'meses': {'labels': labels_meses, 'values': values_meses},
             }
         }
     

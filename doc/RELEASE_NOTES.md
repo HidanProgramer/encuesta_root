@@ -59,3 +59,9 @@
 ### ADD
 
 - Added to Qweb report an image of the map
+
+### Version 18.0.1.8.0
+
+### ADD
+
+- Added a new graph in Dashboard

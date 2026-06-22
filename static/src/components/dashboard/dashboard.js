@@ -106,6 +106,7 @@ export class ClientesDashboard extends Component {
         electrificacion: { labels: [], values: [] },
         municipios: { labels: [], ids: [], dataset_1kw: [], dataset_2kw: [] },
         evaluacion: { labels: [], values: [] },
+        meses: { labels: [], values: [] },
       },
     });
 
@@ -178,6 +179,81 @@ export class ClientesDashboard extends Component {
         },
       ],
     };
+  }
+
+  get clientesMesesChartData() {
+    const labels = this.state.charts.meses?.labels || [];
+    const values = this.state.charts.meses?.values || [];
+
+    return {
+      labels: labels,
+      datasets: [
+        {
+          type: "bar", // Renderiza barras idénticas a las columnas celestes de tu boceto
+          label: "Clientes Encuestados",
+          data: values,
+          backgroundColor: "rgba(54, 162, 235, 0.7)", // Azul suave institucional
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+          barPercentage: 0.6, // Ajusta el ancho de las barras para que se vea estilizado
+        },
+        {
+          type: "line", // Renderiza la línea de tendencia por encima
+          label: "Tendencia",
+          data: values,
+          borderColor: "#1d6fa5", // Azul más oscuro para destacar la línea de la curva
+          borderWidth: 3,
+          fill: false,
+          tension: 0.3, // Suavizado de la curva de tendencia
+          pointBackgroundColor: "#1d6fa5",
+        },
+      ],
+    };
+  }
+  onClientesMesesChartClick(data) {
+    if (!data.label) return;
+
+    // 1. Parseamos la etiqueta (ej: "abr.-25" o "ene.-26")
+    const partes = data.label.split("-"); // ['abr', '25']
+    if (partes.length !== 2) return;
+
+    const mesStr = partes[0];
+    const anioStr = "20" + partes[1]; // Convertimos '25' en '2025'
+
+    // Mapeo inverso para obtener el número de mes correspondiente
+    const mesesMapping = {
+      "ene.": 0,
+      "feb.": 1,
+      "mar.": 2,
+      "abr.": 3,
+      "may.": 4,
+      "jun.": 5,
+      "jul.": 6,
+      "ago.": 7,
+      "sep.": 8,
+      "oct.": 9,
+      "nov.": 10,
+      "dic.": 11,
+    };
+
+    const mesNum = mesesMapping[mesStr];
+    if (mesNum === undefined) return;
+
+    // 2. Calculamos el primer y el último día de ese mes en formato YYYY-MM-DD
+    const fechaInicio = `${anioStr}-${String(mesNum + 1).padStart(2, "0")}-01`;
+
+    // Obtener el último día del mes seleccionando el día 0 del mes siguiente
+    const ultimoDia = new Date(parseInt(anioStr), mesNum + 1, 0).getDate();
+    const fechaFin = `${anioStr}-${String(mesNum + 1).padStart(2, "0")}-${String(ultimoDia).padStart(2, "0")}`;
+
+    // 3. Ejecutamos el filtro por rango en Odoo
+    this.openListView(
+      [
+        ["fecha_enc", ">=", fechaInicio + " 00:00:00"],
+        ["fecha_enc", "<=", fechaFin + " 23:59:59"],
+      ],
+      `Encuestas de ${data.label}`,
+    );
   }
 
   openListView(domain, title) {
